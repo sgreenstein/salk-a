@@ -33,7 +33,29 @@
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-
-	public $components = array('DebugKit.Toolbar');
 	public $helpers = array('Html', 'Form');
+
+	public $components = array(
+		'DebugKit.Toolbar',
+		'Session',
+		'Auth' => array(
+			'loginRedirect' => array('controller' => 'users', 'action' => 'login'),
+			'logoutRedirect' => array('controller' => 'pages', 'action' => 'index'),
+			'authorize' => array('Controller')
+		)
+	);
+	
+	public function beforeFilter() {
+		$this->Auth->allow('index', 'view', 'login', 'logout');
+	}
+	
+	public function isAuthorized($user) {
+		// Admin can access every function
+		if (isset($user['level']) && $user['level'] == 100) {
+			return true;
+		}
+		
+		return false;
+	}
+
 }
