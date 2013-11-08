@@ -1,10 +1,27 @@
 <?php
-App:uses('AppModel', 'Model');
+App::uses('AppModel', 'Model');
 class Camper extends AppModel
 {
-	/*Associations*/
-	public $hasOne = 'User';
-	public $hasOne = 'InsuranceCard';
+	//Associations
+	public $hasOne = array(
+		'User',
+		'InsuranceCard',	
+		array(
+			'SiteAssignment' => array(
+				'className' => 'Site'
+			)
+		),
+		array(
+			'CampChoice1' => array(
+				'className' => 'Camp'
+			)
+		),
+		array(
+			'CampChoice2' => array(
+				'className' => 'Camp'
+			)
+		)
+	);
 	public $hasAndBelongsToMany = 'Camp';
 	public $belongsTo = array
 	(
@@ -13,29 +30,8 @@ class Camper extends AppModel
 			'className' => 'Camp'
 		)
 	);
-	public $hasOne = array
-	(
-		'SiteAssignment' => array
-		(
-			'className' => 'Site'
-		)
-	);
-	public $hasOne = array
-	(
-		'CampChoice1' => array
-		(
-			'className' => 'Camp'
-		)
-	);
-	public $hasOne = array
-	(
-		'CampChoice2' => array
-		(
-			'className' => 'Camp'
-		)
-	);
 
-	/*Validations*/
+	//Validations
 	public $validate = array(
 		'age' => 'naturalNumber',
 		'birthDate' => array(
@@ -62,10 +58,10 @@ class Camper extends AppModel
 		'phone' => array(
 			'rule' => array('custom', '^[0-9]{10}$'),
 			'message' => 'Of the format 8645551234'
-		)
+		),
 		'cell-phone' => array(
 			'rule' => array('custom', '^[0-9]{10}$'),
 			'message' => 'Of the format 8645551234'
 		)
-	)
+	);
 }

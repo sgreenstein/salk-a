@@ -1,9 +1,9 @@
 <?php
 App::uses('AppModel', 'Model');
 class InsuranceCard extends AppModel {
-	/*Associations*/
+	//Associations
 	public $hasOne = 'Camper';
-	/*Validations*/
+	//Validations
 	public $validate = array(
 		'location' => 'url'
 	);
