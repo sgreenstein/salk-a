@@ -26,7 +26,7 @@ class User extends AppModel {
             ),
 			'length' => array(
 				'rule' => array('minLength', 8),
-				'message' => 'Passwords must be at least characters long.'
+				'message' => 'Passwords must be at least 8 characters long.'
 			)
         )
     );
