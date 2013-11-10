@@ -7,7 +7,9 @@
         echo $this->Form->input('password');
 		echo $this->Form->input('first_name');
 		echo $this->Form->input('last_name');
-        echo $this->Form->input('level');
+        $user = $this->Session->read('Auth.User');
+        if ($user['level'] == 100)
+            echo $this->Form->input('level');
     ?>
     </fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
