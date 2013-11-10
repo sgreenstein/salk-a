@@ -3,33 +3,24 @@ App::uses('AppModel', 'Model');
 class Camper extends AppModel
 {
 	//Associations
-	public $hasOne = array(
+	public $belongsTo = array(
 		'User',
 		'InsuranceCard',	
-		array(
-			'SiteAssignment' => array(
-				'className' => 'Site'
-			)
+		'SiteAssignment' => array(
+			'className' => 'Site',
+			'foreignKey' => 'site_assignment'
 		),
-		array(
-			'CampChoice1' => array(
-				'className' => 'Camp'
-			)
+		'CampChoice1' => array(
+			'className' => 'Camp',
+			'foreignKey' => 'camp_choice_1'
 		),
-		array(
-			'CampChoice2' => array(
-				'className' => 'Camp'
-			)
+		'CampChoice2' => array(
+			'className' => 'Camp',
+			'foreignKey' => 'camp_choice_2'
 		)
 	);
+
 	public $hasAndBelongsToMany = 'Camp';
-	public $belongsTo = array
-	(
-		'CampAssignment' => array
-		(
-			'className' => 'Camp'
-		)
-	);
 
 	//Validations
 	public $validate = array(

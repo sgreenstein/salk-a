@@ -1,0 +1,62 @@
+REATE TABLE sites (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	camp_id INT UNSIGNED NOT NULL,
+	user_id INT UNSIGNED NOT NULL,
+	schedule_id INT UNSIGNED NOT NULL,
+	name VARCHAR(30) NOT NULL,
+	description TEXT,
+	created DATETIME DEFAULT NULL,
+	modified DATETIME DEFAULT NULL
+);
+
+CREATE TABLE camps (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	user_id INT UNSIGNED NOT NULL,
+	name VARCHAR(30) NOT NULL,
+	year_active YEAR NOT NULL,
+	description TEXT,
+	created DATETIME DEFAULT NULL,
+	modified DATETIME DEFAULT NULL
+);
+
+CREATE TABLE campers (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	user_id INT UNSIGNED NOT NULL,
+	insurance_card_id INT UNSIGNED,
+	age INT,
+	birth_date DATE,
+	over_18 BOOLEAN,
+	background_check BOOLEAN DEFAULT FALSE,
+	shirt_size ENUM('S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'),
+	camp_choice_1 INT UNSIGNED,
+	camp_choice_2 INT UNSIGNED,
+	camp_assignment INT UNSIGNED,
+	site_assignment INT UNSIGNED,
+	paid BOOLEAN DEFAULT FALSE,
+	application_complete BOOLEAN DEFAULT FALSE,
+	accepted BOOLEAN DEFAULT FALSE,
+	address_1 VARCHAR(100),
+	address_2 VARCHAR(100),
+	city VARCHAR(30),
+	state CHAR(2),
+	zip CHAR(5),
+	email VARCHAR(100),
+	phone CHAR(10),
+	cell_phone CHAR(10),
+	church VARCHAR(40),
+	district VARCHAR(30)
+);
+
+CREATE TABLE insurance_cards (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	camper_id INT UNSIGNED NOT NULL,
+	location VARCHAR(255),
+	created DATETIME DEFAULT NULL,
+	modified DATETIME DEFAULT NULL
+);
+
+CREATE TABLE campers_camps (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	camper_id INT UNSIGNED NOT NULL,
+	camp_id INT UNSIGNED NOT NULL
+);

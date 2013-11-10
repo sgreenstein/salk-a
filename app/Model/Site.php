@@ -4,15 +4,18 @@ class Site extends AppModel {
 	//Associations
 	public $belongsTo = 'Camp';
 	public $hasOne = array(
-		'Schedule',
-		array(
-			'Director' => array(
-				'className' => 'User'
-			)
+		'Schedule' => array(
+			'className' => 'Schedule'
+		),
+		'Director' => array(
+			'className' => 'User'
 		)
 	);
 	public $hasMany = array(
-		'Camper',
+		'Camper' => array(
+			'className' => 'Camper',
+			'foreignKey' => 'site_assignment'
+		),
 		'Event'
 	);
 	//Validations
