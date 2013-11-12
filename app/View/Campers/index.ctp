@@ -12,8 +12,8 @@
 	<tr>
 		<td><?php echo $camper['Camper']['age']; ?></td>
 		<td><?php echo $camper['Camper']['birthDate']; ?></td>
-		<td>created</td>
-		<td>modified</td>
+		<td><?php echo $camper['Camper']['created']; ?></td>
+		<td><?php echo $camper['Camper']['modified']; ?></td>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($camper); ?>

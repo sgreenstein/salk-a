@@ -12,8 +12,8 @@
 	<tr>
 		<td><?php echo $site['Site']['name']; ?></td>
 		<td><?php echo $site['Site']['description']; ?></td>
-		<td>created</td>
-		<td>modified</td>
+		<td><?php echo $site['Site']['created']; ?></td>
+		<td><?php echo $site['Site']['created']; ?></td>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($site); ?>

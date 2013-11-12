@@ -15,15 +15,13 @@ class Camp extends AppModel {
 	//Validations
 	public $validate = array(
 		'name' => array(
-			'rule' => 'alphaNumeric',
-			'required' => true,
-			'allowEmpty' => false,
-			'message' => 'Letters and numbers only'
+			'rule' => 'notEmpty'
 		),
-		'yearActive' => array(
+		'year' => array(
 			'rule' => array('date', 'y'),
 			'required' => true,
-			'allowEmpty' => false
+			'allowEmpty' => false,
+			'message' => 'Must be a valid year, e.g. 2013'
 		)
 	);
 }

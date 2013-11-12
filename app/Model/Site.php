@@ -21,10 +21,10 @@ class Site extends AppModel {
 	//Validations
 	public $validate = array(
 		'name' => array(
-			'rule' => 'alphaNumeric',
+			'rule' => 'notEmpty',
 			'required' => true,
 			'allowEmpty' => false,
-			'message' => 'Letters and numbers only'
+			'message' => 'You must give the site a name.'
 		)
 	);
 }
