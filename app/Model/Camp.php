@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 class Camp extends AppModel {
 	//Associations
 	public $hasOne = array(
-		'Director' => array(
+		'CampDirector' => array(
 			'className' => 'User'
 		)
 	);

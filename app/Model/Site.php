@@ -7,7 +7,7 @@ class Site extends AppModel {
 		'Schedule' => array(
 			'className' => 'Schedule'
 		),
-		'Director' => array(
+		'SiteDirector' => array(
 			'className' => 'User'
 		)
 	);
