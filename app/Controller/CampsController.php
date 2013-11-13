@@ -91,12 +91,7 @@ class CampsController extends AppController {
 		}
 	}
 	public function isAuthorized($user) {
-		// whitelist
 		if (!isset($user)) return false;
-		// admin can access anything
-		if (isset($user['level']) && $user['level'] >= 100) {
-			return true;
-		}
 		switch($this->action) {
 			// camp director can access own camp
 			case 'edit':
@@ -113,6 +108,6 @@ class CampsController extends AppController {
 				// if camper part of this camp
 					return true;	
 		}
-		return false;
+		return parent::isAuthorized($user);
 	}
 }

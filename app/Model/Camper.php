@@ -5,7 +5,9 @@ class Camper extends AppModel
 	//Associations
 	public $belongsTo = array(
 		'User',
-		'InsuranceCard',	
+		'InsuranceCard' => array(
+			'dependent' => true
+		),	
 		'SiteAssignment' => array(
 			'className' => 'Site',
 			'foreignKey' => 'site_assignment'

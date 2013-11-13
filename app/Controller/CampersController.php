@@ -14,7 +14,7 @@ class CampersController extends AppController {
 		if(!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
-		$this->set('camper', $site);
+		$this->set('camper', $camper);
 	}
 	//creates a new camper
 	public function add() {
@@ -59,10 +59,31 @@ class CampersController extends AppController {
 		}		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if($this->Camper->delete($id)) {
-				$this->Session->setFlash(__('Camper %s deleted'));
+				$this->Session->setFlash(__('Camper deleted'));
 			return $this->redirect(array('action' => 'index'));
 			}
 		}
 		$this->Session->setFlash(__('Could not delete the camper'));
+	}
+	//returns true if user is authorized to peform the action
+	public function isAuthorized($user) {
+		if (!isset($user)) return false;
+		switch($this->action) {
+			// camper can edit and view himself
+			case 'edit':
+				$camper = $this->Camper->findById($this->request->params['pass']['0']);
+//				debug($camper);
+//				return true;
+				if($user['id'] == $camper['User']['id'])
+					return true;
+				break;
+			// camper can see himself, site directors and camp directors can see him
+			case 'view':
+				$camper = $this->Camper->findById($this->request->params['pass']['0']);
+					if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
+					return true;
+		}
+		// call parent
+		return parent::isAuthorized($user);
 	}
 }
