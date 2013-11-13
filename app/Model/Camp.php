@@ -8,8 +8,8 @@ class Camp extends AppModel {
 		)
 	);
 	public $hasMany = array(
-		'Site',
-		'Event'
+		'Site' => array('dependent' => true),
+		'Event' => array('dependent' => true)
 	);
 	public $hasAndBelongsToMany = 'Camper';
 	//Validations

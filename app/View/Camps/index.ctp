@@ -10,7 +10,10 @@
 	</tr>
 	<?php foreach ($camps as $camp): ?>
 	<tr>
-		<td><?php echo $camp['Camp']['name']; ?></td>
+		<td><a href='camps/view/<?php echo $camp['Camp']['id'] ?>'>
+				<?php echo $camp['Camp']['name']; ?>
+			</a>
+		</td>
 		<td><?php echo $camp['Camp']['description']; ?></td>
 		<td><?php echo $camp['Camp']['created']; ?></td>
 		<td><?php echo $camp['Camp']['created']; ?></td>

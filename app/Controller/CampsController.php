@@ -58,7 +58,7 @@ class CampsController extends AppController {
 			throw new NotFoundException(__('Invalid camp'));
 		}		
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if($this->Camp->delete($id)) {
+			if($this->Camp->delete($id, true)) {
 				$this->Session->setFlash(__('Camp deleted'));
 				return $this->redirect(array('action' => 'index'));
 			}
