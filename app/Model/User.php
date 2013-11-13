@@ -3,6 +3,13 @@
 App::uses('AuthComponent', 'Controller/Component');
 
 class User extends AppModel {
+    // associations
+    public $hasOne = 'Form';
+    
+    public $hasMany = array(
+        'Blog', 'Photo'
+    );
+    
     public $validate = array(
         'username' => array(
             'required' => array(
