@@ -4,10 +4,13 @@ App::uses('AuthComponent', 'Controller/Component');
 
 class User extends AppModel {
     // associations
-    public $hasOne = 'Form';
+    public $hasOne = array(
+        'Form' => array('dependent' => true)
+    );
     
     public $hasMany = array(
-        'Blog', 'Photo'
+        'Blog' => array('dependent' => true),
+        'Photo' => array('dependent' => true)
     );
     
     public $validate = array(
