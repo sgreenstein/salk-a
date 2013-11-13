@@ -1,5 +1,9 @@
 <?php
 class CampsController extends AppController {
+
+	public function beforeFilter() {
+		parent::beforeFilter();
+	}
 	//views all camps
 	public function index() {
 		$this->set('camps', $this->Camp->find('all'));
@@ -86,5 +90,46 @@ class CampsController extends AppController {
 			$this->Session->setFlash(__('Site could not be added.'));
 		}
 	}
-
+	//deletes the site specified by $id
+	public function deleteSite($id, $campId) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid site'));
+		}
+		$site = $this->Camp->Site->findById($id);
+		if(!$site) {
+			throw new NotFoundException(__('Invalid site'));
+		}		
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if($this->Camp->Site->delete($id, true)) {
+				$this->Session->setFlash(__('Site deleted'));
+				return $this->redirect(array('action' => 'view', $campId));
+			}
+		}
+		$this->Session->setFlash(__('Could not delete the camp'));
+	}
+	public function isAuthorized($user) {
+		// whitelist
+		if (!isset($user)) return false;
+		// admin can access anything
+		if (isset($user['level']) && $user['level'] >= 100) {
+			return true;
+		}
+		switch($this->action) {
+			// camp director can access own camp
+			case 'edit':
+			case 'addSite':
+				if($user['camp_id'] == $this->request->params['pass']['0'])
+					return true;
+				break;
+			case 'deleteSite':
+				$site = $this->Camp->Site->findById($this->request->params['pass']['0']);
+				if($user['camp_id'] == $site['Camp']['id'])
+					return true;
+			// campers, parents can view their camp
+			case 'view':
+				// if camper part of this camp
+					return true;	
+		}
+		return false;
+	}
 }

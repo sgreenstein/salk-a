@@ -66,4 +66,27 @@ class SitesController extends AppController {
 		}
 		$this->Session->setFlash(__('Could not delete the site'));
 	}
+
+	public function isAuthorized($user) {
+		if (!isset($user)) return false;
+		switch($this->action) {
+			// camp director can access if own camp
+			// site director can access if own site
+			case 'edit':
+			case 'view':
+				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if($user['camp_id'] == $site['Camp']['id'])
+					return true;
+				if($user['site_id'] == $site['Site']['id'])
+					return true;
+				break;
+			// camp director can delete site if own camp
+			case 'delete':
+				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if($user['camp_id'] == $site['Camp']['id'])
+					return true;	
+		}
+		// whitelist
+		return false;
+	}
 }
