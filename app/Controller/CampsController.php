@@ -90,23 +90,6 @@ class CampsController extends AppController {
 			$this->Session->setFlash(__('Site could not be added.'));
 		}
 	}
-	//deletes the site specified by $id
-	public function deleteSite($id, $campId) {
-		if(!$id) {
-			throw new NotFoundException(__('Invalid site'));
-		}
-		$site = $this->Camp->Site->findById($id);
-		if(!$site) {
-			throw new NotFoundException(__('Invalid site'));
-		}		
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if($this->Camp->Site->delete($id, true)) {
-				$this->Session->setFlash(__('Site deleted'));
-				return $this->redirect(array('action' => 'view', $campId));
-			}
-		}
-		$this->Session->setFlash(__('Could not delete the camp'));
-	}
 	public function isAuthorized($user) {
 		// whitelist
 		if (!isset($user)) return false;

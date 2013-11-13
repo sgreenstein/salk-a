@@ -60,8 +60,8 @@ class SitesController extends AppController {
 		}		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if($this->Site->delete($id)) {
-				$this->Session->setFlash(__('Site %s deleted'));
-			return $this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Site deleted'));
+			return $this->redirect(array('controller' => 'camps', 'action' => 'view', $site['Camp']['id']));
 			}
 		}
 		$this->Session->setFlash(__('Could not delete the site'));
@@ -86,7 +86,7 @@ class SitesController extends AppController {
 				if($user['camp_id'] == $site['Camp']['id'])
 					return true;	
 		}
-		// whitelist
-		return false;
+		// call parent
+		return parent::isAuthorized($user);
 	}
 }

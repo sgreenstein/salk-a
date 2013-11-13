@@ -22,7 +22,6 @@ class CampersController extends AppController {
 			$this->Camper->create();
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Camper successfully created.'));
-				//TODO: create a new schedule tied to this camper
 				return $this->redirect(array('action' => 'index'));
 			}
 			$this->Session->setFlash(__('Camper could not be created.'));

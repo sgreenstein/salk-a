@@ -9,7 +9,7 @@
 	<td><?php echo $site['name'] ?></td>
 	<td><?php echo $site['description'] ?></td>
 	<td><?php echo $this->Form->postLink('Delete this site',
-		array('action' => 'deleteSite', $site['id'], $camp['Camp']['id']),
+		array('controller' => 'sites', 'action' => 'delete', $site['id']),
 			array('confirm' => "This will delete the site's roster and events. This cannot be undone. Do you want to proceed?")
 	) ?></td>
 </tr>
