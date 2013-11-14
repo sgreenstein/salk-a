@@ -5,6 +5,9 @@ class InsuranceCard extends AppModel {
 	public $hasOne = 'Camper';
 	//Validations
 	public $validate = array(
-		'url' => 'url'
+		'url' => 'url',
+		'required' => true,
+		'allowEmpty' => false,
+		'message' => 'Must be a valid url'
 	);
 }

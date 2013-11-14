@@ -36,6 +36,7 @@ class CampersController extends AppController {
 		if (!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
+		$this->set('camper', $camper);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camper->id = $id;
 			if ($this->Camper->save($this->request->data)) {
@@ -48,6 +49,29 @@ class CampersController extends AppController {
 			$this->request->data = $camper;
 		}
 	}
+
+	public function addInsuranceCard($id = null) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			$this->Camper->InsuranceCard->create();
+			$this->request->data['InsuranceCard']['camper_id'] = $id;
+			//TODO add InsuranceCard's id to camper
+			if($this->Camper->InsuranceCard->save($this->request->data)) {
+				$this->Session->setFlash(__('Card added'));
+				return $this->redirect(array('action' => 'view', $id));
+			}
+		}
+		else {
+			$this->Session->setFlash(__('Card could not be added.'));
+		}
+	}
+
 	//assigns a camper to a camp, puts the camp in their list of past camps
 	public function assignCamp($id = null) {
 		$this->set('camps', $this->Camper->Camp->find('list'));
@@ -59,6 +83,7 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$this->set('choice1', $camper['Camper']['camp_choice_1']);
+		$this->set('choice2', $camper['Camper']['camp_choice_2']);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camper->id = $id;
 			if($this->Camper->saveAll($this->request->data)) {
@@ -94,6 +119,7 @@ class CampersController extends AppController {
 		switch($this->action) {
 			// camper can edit and view himself
 			case 'edit':
+			case 'addInsuranceCard':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 //				debug($camper);
 //				return true;
