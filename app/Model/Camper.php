@@ -22,7 +22,14 @@ class Camper extends AppModel
 		)
 	);
 
-	public $hasAndBelongsToMany = 'Camp';
+	public $hasAndBelongsToMany =
+		array( 'Camp' => array(
+		'className' => 'Camp',
+		'joinTable' => 'campers_camps',
+		'foreignKey' => 'camper_id',
+		'associationForeignKey' => 'camp_id'
+	)
+	);
 
 	//Validations
 	public $validate = array(
@@ -34,14 +41,14 @@ class Camper extends AppModel
 		'over18' => 'boolean',
 		'backgroundCheck' => 'boolean',
 		'shirtSize' => array(
-			'rule' => array('custom', '^S$|^M$|^L$|^XL$|^[2-4]XL$'),
+			'rule' => array('custom', '/^S$|^M$|^L$|^XL$|^[2-4]XL$/'),
 			'message' => 'S, M, L, XL, 2XL, 3XL, or 4XL'
 		),
 		'paid' => 'boolean',
 		'applicationComplete' => 'boolean',
 		'accepted' => 'boolean',
 		'state' => array(
-			'rule' => array('custom', '^[A-Z]{2}$'),
+			'rule' => array('custom', '/^[A-Z]{2}$/'),
 			'message' => 'Postal abbreviation, e.g. SC'
 		),
 		'zip' => array(
@@ -49,11 +56,11 @@ class Camper extends AppModel
 		),
 		'email' => 'email',
 		'phone' => array(
-			'rule' => array('custom', '^[0-9]{10}$'),
+			'rule' => array('custom', '/^[0-9]{10}$/'),
 			'message' => 'Of the format 8645551234'
 		),
 		'cell-phone' => array(
-			'rule' => array('custom', '^[0-9]{10}$'),
+			'rule' => array('custom', '/^[0-9]{10}$/'),
 			'message' => 'Of the format 8645551234'
 		)
 	);

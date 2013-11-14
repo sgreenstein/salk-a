@@ -48,6 +48,28 @@ class CampersController extends AppController {
 			$this->request->data = $camper;
 		}
 	}
+	//assigns a camper to a camp, puts the camp in their list of past camps
+	public function assignCamp($id = null) {//, $campId = null) {
+		$this->set('camps', $this->Camper->Camp->find('list'));
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			$this->Camper->id = $id;
+			if($this->Camper->saveAll($this->request->data)) {
+				$this->Session->setFlash(__('Assigned to camp'));
+				return true;
+			}
+			$this->Session->setFlash(__('Could not be assigned. Please try again.'));
+		}
+		if (!$this->request->data) {
+			$this->request->data = $camper;
+		}
+	}	
 	//deletes a camper
 	public function delete($id = null) {
 		if(!$id) {

@@ -105,7 +105,8 @@ class CampsController extends AppController {
 					return true;
 			// campers, parents can view their camp
 			case 'view':
-				// if camper part of this camp
+				debug($user);
+//				if($user
 					return true;	
 		}
 		return parent::isAuthorized($user);

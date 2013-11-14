@@ -11,7 +11,14 @@ class Camp extends AppModel {
 		'Site' => array('dependent' => true),
 		'Event' => array('dependent' => true)
 	);
-	public $hasAndBelongsToMany = 'Camper';
+	public $hasAndBelongsToMany = array(
+		'Camper' => array(
+			'className' => 'Camper',
+			'joinTable' => 'campers_camps',
+			'foreignKey' => 'camp_id',
+			'associationForeignKey' => 'camper_id'
+		)
+	);
 	//Validations
 	public $validate = array(
 		'name' => array(
