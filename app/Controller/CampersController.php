@@ -49,7 +49,7 @@ class CampersController extends AppController {
 		}
 	}
 	//assigns a camper to a camp, puts the camp in their list of past camps
-	public function assignCamp($id = null) {//, $campId = null) {
+	public function assignCamp($id = null) {
 		$this->set('camps', $this->Camper->Camp->find('list'));
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
@@ -58,6 +58,7 @@ class CampersController extends AppController {
 		if(!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
+		$this->set('choice1', $camper['Camper']['camp_choice_1']);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camper->id = $id;
 			if($this->Camper->saveAll($this->request->data)) {
