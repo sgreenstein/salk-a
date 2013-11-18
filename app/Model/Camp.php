@@ -31,4 +31,17 @@ class Camp extends AppModel {
 			'message' => 'Must be a valid year, e.g. 2013'
 		)
 	);
+	//Methods
+
+	//Returns true if user is a camper that is in the camp
+	public function isUserInCamp($userId, $campId) {
+		$camp = $this->findById($campId);
+		foreach ($camp['Camper'] as $camper) {
+			if ($camper['user_id'] == $userId) {
+				return true;
+			}
+		}
+		unset($camper);
+		return false;
+	}
 }

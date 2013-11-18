@@ -100,14 +100,13 @@ class CampsController extends AppController {
 					return true;
 				break;
 			case 'deleteSite':
-				$site = $this->Camp->Site->findById($this->request->params['pass']['0']);
-				if($user['camp_id'] == $site['Camp']['id'])
+				$camp = $this->Camp->findById($this->request->params['pass']['0']);
+				if($user['camp_id'] == $camp['Camp']['id'])
 					return true;
 			// campers, parents can view their camp
 			case 'view':
-				debug($user);
-//				if($user
-					return true;	
+				if($this->Camp->isUserInCamp($user['id'], $this->request->params['pass']['0']))			
+					return true;
 		}
 		return parent::isAuthorized($user);
 	}
