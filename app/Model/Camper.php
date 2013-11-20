@@ -35,7 +35,7 @@ class Camper extends AppModel
 		)
  	);
 	//Virtual fields
-	public $virtualFields = array(
+//	public $virtualFields = array(
 //		'age' => 'TIMEDIFF(birth_date, 
 	
 	//Validations
