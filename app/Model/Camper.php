@@ -34,10 +34,13 @@ class Camper extends AppModel
 			'associationForeignKey' => 'camp_id'
 		)
  	);
-
+	//Virtual fields
+	public $virtualFields = array(
+//		'age' => 'TIMEDIFF(birth_date, 
+	
 	//Validations
 	public $validate = array(
-		'age' => 'naturalNumber',
+//		'age' => 'naturalNumber',
 //		'birthDate' => array(
 //			'rule' => 'notEmpty',
 //			'rule' => array('date', 'mdy'),
@@ -45,7 +48,7 @@ class Camper extends AppModel
 //			'allowEmpty' => false,
 //			'required' => true
 //		),
-		'over18' => 'boolean',
+//		'over18' => 'boolean',
 		'backgroundCheck' => 'boolean',
 		'shirt_size' => array(
 			'rule' => array('custom', '/^S$|^M$|^L$|^XL$|^[2-4]XL$/'),

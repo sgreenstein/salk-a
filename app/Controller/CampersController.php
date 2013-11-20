@@ -16,12 +16,15 @@ class CampersController extends AppController {
 		}
 		$this->set('camper', $camper);
 	}
-	//creates a new camper
+	//creates a camper for this user
+	//corresponds to filling out the application form
 	public function add() {
 		$this->set('campChoices', $this->Camper->Camp->find('list'));
 		if ($this->request->is('post')) {
+			//tie the camper to the current user
+			$this->request->data['Camper']['user_id'] = $this->Auth->user('id');
 			$this->Camper->create();
-			debug($this->request->data);
+//			debug($this->request->data);
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Camper successfully created.'));
 				return $this->redirect(array('action' => 'index'));
@@ -123,8 +126,6 @@ class CampersController extends AppController {
 			case 'edit':
 			case 'addInsuranceCard':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
-//				debug($camper);
-//				return true;
 				if($user['id'] == $camper['User']['id'])
 					return true;
 				break;
@@ -132,7 +133,16 @@ class CampersController extends AppController {
 			case 'view':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 					if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
+						return true;
+				break;
+			// user can only create their camper if the user has not already created a camper
+			// admins cannot become campers
+			case 'add':
+				if(!$user['camper_id'] && $user['level'] < 100)
 					return true;
+				else
+					return false;
+				break;
 		}
 		// call parent
 		return parent::isAuthorized($user);
