@@ -3,15 +3,15 @@
 <h1>Campers</h1>
 <table>
 	<tr>
-		<th>Age</th>
+		<th>Email Address</th>
 		<th>Date of Birth</th>
 		<th>Created</th>
 		<th>Modified</th>
 	</tr>
 	<?php foreach ($campers as $camper): ?>
 	<tr>
-		<td><?php echo $camper['Camper']['age']; ?></td>
-		<td><?php echo $camper['Camper']['birthDate']; ?></td>
+		<td><?php echo $camper['Camper']['email']; ?></td>
+		<td><?php echo $camper['Camper']['birth_date']; ?></td>
 		<td><?php echo $camper['Camper']['created']; ?></td>
 		<td><?php echo $camper['Camper']['modified']; ?></td>
 	</tr>

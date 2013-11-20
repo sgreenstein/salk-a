@@ -18,8 +18,10 @@ class CampersController extends AppController {
 	}
 	//creates a new camper
 	public function add() {
+		$this->set('campChoices', $this->Camper->Camp->find('list'));
 		if ($this->request->is('post')) {
 			$this->Camper->create();
+			debug($this->request->data);
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Camper successfully created.'));
 				return $this->redirect(array('action' => 'index'));
