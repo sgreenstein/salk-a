@@ -1,4 +1,5 @@
 <?php
+App::uses('AppController', 'Controller');
 class InsuranceCardsController extends AppController {
 	//views one insuranceCard
 	public function view($id = null) {

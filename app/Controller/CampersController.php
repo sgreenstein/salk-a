@@ -1,4 +1,5 @@
 <?php
+App::uses('AppController', 'Controller');
 class CampersController extends AppController {
 	//views all campers
 	public function index() {
