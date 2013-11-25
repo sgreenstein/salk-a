@@ -22,6 +22,7 @@
  */
 
 	App::uses('Controller', 'Controller');
+	public $theme = "Cakestrap"; /* For Views */
 
 /**
  * Application Controller
