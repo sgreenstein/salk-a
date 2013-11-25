@@ -25,7 +25,6 @@ class CampersController extends AppController {
 			//tie the camper to the current user
 			$this->request->data['Camper']['user_id'] = $this->Auth->user('id');
 			$this->Camper->create();
-//			debug($this->request->data);
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Camper successfully created.'));
 				return $this->redirect(array('action' => 'index'));
@@ -43,6 +42,7 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$this->set('camper', $camper);
+		$this->set('campChoices', $this->Camper->Camp->find('list'));
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camper->id = $id;
 			if ($this->Camper->save($this->request->data)) {
@@ -61,20 +61,31 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$camper = $this->Camper->findById($id);
+		$this->set('currentCard', $camper['Camper']['insurance_card']);
 		if(!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			$this->Camper->InsuranceCard->create();
-			$this->request->data['InsuranceCard']['camper_id'] = $id;
-			//TODO add InsuranceCard's id to camper
-			if($this->Camper->InsuranceCard->save($this->request->data)) {
+			// upload the file to the server
+			$fileOK = $this->uploadFiles('img/insurance_cards', $this->request->data['Camper']);
+			// if file was uploaded ok
+			 if(array_key_exists('urls', $fileOK)) {
+			 	// save the url in the form data
+				$this->request->data['Camper']['insurance_card'] = $fileOK['urls'][0];
+			 }
+			 else {
+				 $this->Session->setFlash(__('Upload failed'));
+			 }
+			$this->Camper->id = $id;
+			if($this->Camper->save($this->request->data, array(
+				'validate' => false, 'fieldList' => array(
+					'insurance_card')))) {
 				$this->Session->setFlash(__('Card added'));
 				return $this->redirect(array('action' => 'view', $id));
 			}
-		}
-		else {
-			$this->Session->setFlash(__('Card could not be added.'));
+			else {
+				$this->Session->setFlash(__('Card could not be added.'));
+			}
 		}
 	}
 
