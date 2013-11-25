@@ -9,8 +9,13 @@
 	echo $this->Form->input('id', array('type' => 'hidden'));
 	?>
     </fieldset>
-<?php echo $this->Form->end(__('Submit'));
-	echo $this->Form->postLink('Add an insurance card',
-		array('action' => 'addInsuranceCard', $camper['Camper']['id']));
+<?php
+	echo $this->Form->end(__('Submit'));
+	echo $this->Form->create('Camper', array('type' => 'file'));
+	echo $this->Form->input('insurance_card', array(
+		'type' => 'file', 'accept' => 'image/*'));
+	echo $this->Form->end('Upload');
+//	echo $this->Form->postLink('Add an insurance card',
+//		array('action' => 'addInsuranceCard', $camper['Camper']['id']));
 ?>
 </div>

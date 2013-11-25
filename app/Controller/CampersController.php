@@ -127,13 +127,17 @@ class CampersController extends AppController {
 			case 'edit':
 			case 'addInsuranceCard':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
+				if(!$camper)
+					break;
 				if($user['id'] == $camper['User']['id'])
 					return true;
 				break;
 			// camper can see himself, site directors and camp directors can see him
 			case 'view':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
-					if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
+				if(!$camper)
+					break;
+				if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
 						return true;
 				break;
 			// user can only create their camper if the user has not already created a camper
