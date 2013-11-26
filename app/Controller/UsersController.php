@@ -106,7 +106,7 @@ class UsersController extends AppController {
 		// Admin can access every function
 		if (!isset($user)) return false;
 		
-		if (isset($user['level']) && $user['level'] >= 50) {
+		if (isset($user['level']) && $user['level'] >= 100) {
 			return true;
 		}
 		

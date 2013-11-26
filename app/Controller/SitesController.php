@@ -1,4 +1,5 @@
 <?php
+App::uses('AppController', 'Controller');
 class SitesController extends AppController {
 	//views all sites
 	public function index() {
