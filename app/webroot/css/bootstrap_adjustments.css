@@ -1,0 +1,14 @@
+/* Extra Bootstrap Stuff (sam) */
+body {
+	padding-top:70px;
+}
+
+/* Keep body material in the center of the page */
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+main-container {
+  .center-block();
+}

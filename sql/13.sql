@@ -1,0 +1,4 @@
+DROP TABLE forms;
+
+ALTER TABLE campers
+ADD form_pdf VARCHAR (255) DEFAULT NULL;
