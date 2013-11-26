@@ -35,8 +35,10 @@ class Camper extends AppModel
 		)
  	);
 	//Virtual fields
-//	public $virtualFields = array(
-//		'age' => 'TIMEDIFF(birth_date, 
+	public $virtualFields = array(
+		'age' => "YEAR(NOW())-YEAR(Camper.birth_date)",
+		'over_18' => "YEAR(NOW())-YEAR(Camper.birth_date) >= 18"
+	);
 	
 	//Validations
 	public $validate = array(
