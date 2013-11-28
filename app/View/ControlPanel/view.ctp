@@ -1,6 +1,6 @@
 <div class="controlPanel view">
 
-<h1><?php echo "Salkehatichie" ?></h1>
+<h1><?php echo "Salkehatchie" ?></h1>
 
 <h2><?php echo __('Print Health Info Booklet'); ?></h2>
 <?php echo $this->Form->end(__('Select')); ?>
