@@ -1,10 +1,10 @@
 <div class="photos form">
-<?php echo $this->Form->create('Photo'); ?>
+<?php echo $this->Form->create('Photo', array('type' => 'file')); ?>
 	<fieldset>
 		<legend><?php echo __('Add Photo'); ?></legend>
 	<?php
 		echo $this->Form->input('user_id');
-		echo $this->Form->input('url');
+		echo $this->Form->input('photo_data', array('type' => 'file'));
 		echo $this->Form->input('name');
 		echo $this->Form->input('description');
 	?>

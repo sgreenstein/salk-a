@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <nav class="navbar navbar-default" role="navigation">
 	<div class="navbar-header">
 		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -25,3 +26,12 @@
 		</ul><!-- /.nav navbar-nav -->
 	</div><!-- /.navbar-collapse -->
 </nav><!-- /.navbar navbar-default -->
+=======
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<ul class="nav nav-tabs">
+		<li><a href="#">Profile</a></li>
+		<li><a href="#">Camps</a></li>
+		<li><a href="#">Home</a></li>
+	</ul>
+</nav>
+>>>>>>> c4d360451c3dfb726edc9b7d104ab9d0443335fb

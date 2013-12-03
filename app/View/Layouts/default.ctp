@@ -33,6 +33,10 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 			echo $this->Html->css('bootstrap');
 			echo $this->Html->css('main');
+<<<<<<< HEAD
+=======
+			echo $this->Html->css('bootstrap_adjustments');
+>>>>>>> c4d360451c3dfb726edc9b7d104ab9d0443335fb
 
 			echo $this->fetch('css');
 			
@@ -44,6 +48,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	</head>
 
 	<body>
+<<<<<<< HEAD
 
 		<div id="main-container">
 		
@@ -72,4 +77,34 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 	</body>
 
+=======
+		
+		<div id="main-container">
+		
+			<div id="header" class="container">
+				<?php echo $this->element('menu/top_menu'); ?>
+			</div><!-- /#header .container -->
+			
+			<div id="content" class="container">
+				<?php echo $this->Session->flash(); ?>
+				<?php echo $this->fetch('content'); ?>
+			</div><!-- /#content .container -->
+			
+			<div id="footer" class="container">
+				<?php //Silence is golden ?>
+			</div><!-- /#footer .container -->
+			
+		</div><!-- /#main-container -->
+		
+		<div class="container">
+			<div class="well well-sm">
+				<small>
+					<?php echo $this->element('sql_dump'); ?>
+				</small>
+			</div><!-- /.well well-sm -->
+		</div><!-- /.container -->
+		
+	</body>
+
+>>>>>>> c4d360451c3dfb726edc9b7d104ab9d0443335fb
 </html>

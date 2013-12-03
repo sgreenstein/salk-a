@@ -1,4 +1,5 @@
 <?php
+App::uses('AppController', 'Controller');
 class CampsController extends AppController {
 
 	public function beforeFilter() {
