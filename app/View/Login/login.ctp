@@ -14,15 +14,18 @@
 					));
 					echo $this->Form->input('password',
 						array(
-						'type' => 'text',
+						'type' => 'password',
 						'class' => 'form-control',
 						'placeholder' => 'Password'
 					));
 				?>
 			</fieldset>
-			<?php echo $this->Form->end(__('Login')); ?>
+			<?php
+				$options = array('label' => 'Submit', 'class' => 'btn btn-primary btn-block');
+				echo $this->Form->end($options);
+			?>
 			<div>
-				<a href="#" class="text-center new-account">Create an account </a>
+				<a href="/users/addCamper/" class="text-center new-account">Create an account </a>
 			</div>
         </div>
     </div>

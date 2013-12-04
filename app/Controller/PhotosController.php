@@ -48,6 +48,16 @@ class PhotosController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Photo->create();
+            // upload photo to server
+            $fileOK = $this->uploadFiles('img/photos', $this->request->data['Photo']);
+            // if file was uploaded successfully
+            if (array_key_exists('urls', $fileOK)) {
+                // save url in form data
+                $this->request->data['Photo']['url'] = $fileOK['urls'][0];
+            }
+            else {
+                $this->Session->setFlash(__('Upload failed'));
+            }
 			if ($this->Photo->save($this->request->data)) {
 				$this->Session->setFlash(__('The photo has been saved.'));
 				return $this->redirect(array('action' => 'index'));

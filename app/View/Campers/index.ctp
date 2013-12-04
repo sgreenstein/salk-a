@@ -6,6 +6,8 @@
 			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('insurance_card'); ?></th>
 			<th><?php echo $this->Paginator->sort('birth_date'); ?></th>
+			<th><?php echo $this->Paginator->sort('age'); ?></th>
+			<th><?php echo $this->Paginator->sort('over_18'); ?></th>
 			<th><?php echo $this->Paginator->sort('background_check'); ?></th>
 			<th><?php echo $this->Paginator->sort('shirt_size'); ?></th>
 			<th><?php echo $this->Paginator->sort('camp_choice_1'); ?></th>
@@ -37,6 +39,8 @@
 		</td>
 		<td><?php echo h($camper['Camper']['insurance_card']); ?>&nbsp;</td>
 		<td><?php echo h($camper['Camper']['birth_date']); ?>&nbsp;</td>
+		<td><?php echo h($camper['Camper']['age']); ?>&nbsp;</td>
+		<td><?php echo h($camper['Camper']['over_18']); ?>&nbsp;</td>
 		<td><?php echo h($camper['Camper']['background_check']); ?>&nbsp;</td>
 		<td><?php echo h($camper['Camper']['shirt_size']); ?>&nbsp;</td>
 		<td>
