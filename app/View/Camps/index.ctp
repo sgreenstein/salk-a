@@ -1,7 +1,21 @@
 <!-- File: /app/View/Camps/index.ctp -->
 
+<head>
+	<?php echo $this->Html->script('libs/system-search'); ?>
+</head>
+
 <h1>Camps</h1>
-<table class="table table-hover">
+
+<form action="#" method="get">
+	<div class="input-group">
+		<input class="form-control" id="system-search" name="q" placeholder="Search for" required>
+		<span class="input-group-btn">
+			<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+		</span>
+	</div>
+</form>
+
+<table class="table table-hover table-list-search">
 	<tr>
 		<th>Name</th>
 		<th>Description</th>
@@ -26,3 +40,5 @@
 	<?php endforeach; ?>
 	<?php unset($camp); ?>
 </table>
+
+<a href="/camps/add" class="btn btn-primary">Add Camp</a>

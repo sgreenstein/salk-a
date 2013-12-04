@@ -72,23 +72,25 @@ class CampsController extends AppController {
 	}
 	//adds a site to this camp
 	public function addSite($id = null) {
-		if(!$id) {
-			throw new NotFoundException(__('Invalid camp'));
-		}
-		$camp = $this->Camp->findById($id);
-		if(!$camp) {
-			throw new NotFoundException(__('Invalid camp'));
-		}
-		if ($this->request->is(array('post', 'put'))) {
-			$this->Camp->Site->create();
-			$this->request->data['Site']['camp_id'] = $id;
-			if($this->Camp->Site->save($this->request->data)) {
-				$this->Session->setFlash(__('Site added'));
-				return $this->redirect(array('action' => 'view', $id));
+		if ($this->request->is('post')) {
+			if(!$id) {
+				throw new NotFoundException(__('Invalid camp'));
 			}
-		}
-		else {
-			$this->Session->setFlash(__('Site could not be added.'));
+			$camp = $this->Camp->findById($id);
+			if(!$camp) {
+				throw new NotFoundException(__('Invalid camp'));
+			}
+			if ($this->request->is(array('post', 'put'))) {
+				$this->Camp->Site->create();
+				$this->request->data['Site']['camp_id'] = $id;
+				if($this->Camp->Site->save($this->request->data)) {
+					$this->Session->setFlash(__('Site added'));
+					return $this->redirect(array('action' => 'view', $id));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Site could not be added.'));
+			}
 		}
 	}
 	public function isAuthorized($user) {
