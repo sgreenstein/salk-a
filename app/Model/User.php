@@ -5,7 +5,6 @@ App::uses('AuthComponent', 'Controller/Component');
 class User extends AppModel {
     // associations
     public $hasOne = array(
-	    'Form' => array('dependent' => true),
 	    'Camper' => array('dependent' => true)
     );
     
