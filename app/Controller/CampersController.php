@@ -148,8 +148,60 @@ class CampersController extends AppController {
 			$this->request->data = $camper;
 		}
 	}	
+	
+	public function applicationComplete($id = null) {
+		//marks a camper's application as complete if:
+		//form is uploaded, insurance card is uploaded,
+		//and camp choices are valid
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$completer = array('Camper' => array('id' => $id, 'application_complete' => true));
+			if ($camper['Camper']['insurance_card'] != null)
+				$this->Session->setFlash(__('Insurance card photo must be uploaded to complete application.'));
+			elseif ($camper['Camper']['form_pdf'] != null)
+				$this->Session->setFlash(__('PDF form must be uploaded to complete application.'));
+			elseif (($camper['Camper']['camp_choice_1'] == null) || ($camper['Camper']['camp_choice_2'] == null))
+				$this->Session->setFlash(__('Camp choices must be filled in to complete application.'));
+			elseif ($this->Camper->save($completer, array('validate' => false)))
+				$this->Session->setFlash(__('Application complete.'));
+			else
+				$this->Session->setFlash(__('Application could not be marked complete.'));
+		}
+		return $this->redirect(array('action' => 'view', $id));
+	}
+
+	public function yearlyReset() {
+		//resets camp choices, background check,
+		//application complete, accepted
+		//called by admin
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if($this->Camper->updateAll(
+				array(
+					'id' => $id,
+					'accepted' => false,
+					'camp_choice_1' => null,
+					'camp_choice_2' => null,
+					'background_check' => false,
+					'application_complete' => false
+				)
+			)) {
+				$this->Session->setFlash(__('All campers reset'));
+				return $this->redirect(array('action' => 'index'));
+			}
+		}
+		$this->Session->setFlash(__('Could not reset all campers.'));
+		return $this->redirect(array('action' => 'index'));
+	}
 
 	public function accept($id = null) {
+		//marks a camper as accepted into the salkehatchie program
+		//called by admin
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
@@ -172,6 +224,7 @@ class CampersController extends AppController {
 	public function passedBackgroundCheck($id = null) {
 		//call this when a camper has passed their background check
 		//sets background_check to true
+		//called by admin
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
@@ -213,14 +266,9 @@ class CampersController extends AppController {
 		switch($this->action) {
 			// camper can edit and view himself
 			case 'edit':
+			case 'application_complete':
 			case 'addInsuranceCard':
-				$camper = $this->Camper->findById($this->request->params['pass']['0']);
-				if(!$camper)
-					break;
-				if($user['id'] == $camper['User']['id'])
-					return true;
-				break;
-            case 'addFormPDF':
+            		case 'addFormPDF':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 				if(!$camper)
 					break;
