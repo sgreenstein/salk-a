@@ -20,16 +20,18 @@ class CampersController extends AppController {
 	//creates a camper for this user
 	//corresponds to filling out the application form
 	public function add() {
-		$this->set('campChoices', $this->Camper->Camp->find('list'));
+		$this->set('campChoices', $this->Camper->Camp->find('list',
+			array('conditions' => array('Camp.year' => date('Y')))
+		));
 		if ($this->request->is('post')) {
 			//tie the camper to the current user
 			$this->request->data['Camper']['user_id'] = $this->Auth->user('id');
 			$this->Camper->create();
 			if ($this->Camper->save($this->request->data)) {
-				$this->Session->setFlash(__('Camper successfully created.'));
+				$this->Session->setFlash(__('Application saved.'));
 				return $this->redirect(array('action' => 'index'));
 			}
-			$this->Session->setFlash(__('Camper could not be created.'));
+			$this->Session->setFlash(__('Application form could not be saved.'));
 		}
 	}
 	//edits an existing camper
@@ -229,9 +231,9 @@ class CampersController extends AppController {
 			case 'view':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 				if(!$camper)
-					break;
+					return true;
 				if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
-						return true;
+					return true;
 				break;
 			// user can only create their camper if the user has not already created a camper
 			// admins cannot become campers
