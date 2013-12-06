@@ -88,6 +88,39 @@ class CampersController extends AppController {
 			}
 		}
 	}
+    
+    public function addFormPDF($id = null) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		$this->set('currentForm', $camper['Camper']['form_pdf']);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			// upload the file to the server
+			$fileOK = $this->uploadFiles('img/form_pdf', $this->request->data['Camper']);
+			// if file was uploaded ok
+			 if(array_key_exists('urls', $fileOK)) {
+			 	// save the url in the form data
+				$this->request->data['Camper']['form_pdf'] = $fileOK['urls'][0];
+			 }
+			 else {
+				 $this->Session->setFlash(__('Upload failed'));
+			 }
+			$this->Camper->id = $id;
+			if($this->Camper->save($this->request->data, array(
+				'validate' => false, 'fieldList' => array(
+					'form_pdf')))) {
+				$this->Session->setFlash(__('Form uploaded'));
+				return $this->redirect(array('action' => 'view', $id));
+			}
+			else {
+				$this->Session->setFlash(__('Form could not be uploaded.'));
+			}
+		}
+	}
 
 	//assigns a camper to a camp, puts the camp in their list of past camps
 	public function assignCamp($id = null) {
@@ -179,6 +212,13 @@ class CampersController extends AppController {
 			// camper can edit and view himself
 			case 'edit':
 			case 'addInsuranceCard':
+				$camper = $this->Camper->findById($this->request->params['pass']['0']);
+				if(!$camper)
+					break;
+				if($user['id'] == $camper['User']['id'])
+					return true;
+				break;
+            case 'addFormPDF':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 				if(!$camper)
 					break;
