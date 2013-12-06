@@ -1,163 +1,200 @@
-<div class="campers view">
-<h2><?php echo __('Camper'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
+
+<div id="page-container" class="row">
+
+	<div id="sidebar" class="col-sm-3">
+		
+		<div class="actions">
+			
+			<ul class="list-group">			
+						<li class="list-group-item"><?php echo $this->Html->link(__('Edit Camper'), array('action' => 'edit', $camper['Camper']['id']), array('class' => '')); ?> </li>
+						<li class="list-group-item"><?php echo $this->Form->postLink(__('Accept Camper'), array('action' => 'accept', $camper['Camper']['id']), array('class' => '')); ?> </li>
+						<li class="list-group-item"><?php echo $this->Form->postLink(__('Mark background check as complete'), array('action' => 'passedBackgroundCheck', $camper['Camper']['id']), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Form->postLink(__('Delete Camper'), array('action' => 'delete', $camper['Camper']['id']), array('class' => ''), __('Are you sure you want to delete # %s?', $camper['Camper']['id'])); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('List Campers'), array('action' => 'index'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('New Camper'), array('action' => 'add'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('List Sites'), array('controller' => 'sites', 'action' => 'index'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('New Site Assignment'), array('controller' => 'sites', 'action' => 'add'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('List Camps'), array('controller' => 'camps', 'action' => 'index'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('New Camp Assignment'), array('controller' => 'camps', 'action' => 'add'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index'), array('class' => '')); ?> </li>
+		<li class="list-group-item"><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add'), array('class' => '')); ?> </li>
+				
+			</ul><!-- /.list-group -->
+			
+		</div><!-- /.actions -->
+		
+	</div><!-- /#sidebar .span3 -->
+	
+	<div id="page-content" class="col-sm-9">
+		
+		<div class="campers view">
+
+			<h2><?php  echo __('Camper'); ?></h2>
+			
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<tbody>
+						<tr>		<td><strong><?php echo __('Id'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['id']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('User'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($camper['User']['id'], array('controller' => 'users', 'action' => 'view', $camper['User']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('User'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($camper['User']['id'], array('controller' => 'users', 'action' => 'view', $camper['User']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Insurance Card'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Insurance Card'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['insurance_card']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Birth Date'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Birth Date'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['birth_date']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Background Check'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Background Check'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['background_check']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Shirt Size'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Shirt Size'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['shirt_size']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Camp Choice1'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($camper['CampChoice1']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampChoice1']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Camp Choice1'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($camper['CampChoice1']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampChoice1']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Camp Choice2'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($camper['CampChoice2']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampChoice2']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Camp Choice2'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($camper['CampChoice2']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampChoice2']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Camp Assignment'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($camper['CampAssignment']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampAssignment']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Camp Assignment'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($camper['CampAssignment']['name'], array('controller' => 'camps', 'action' => 'view', $camper['CampAssignment']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Site Assignment'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($camper['SiteAssignment']['name'], array('controller' => 'sites', 'action' => 'view', $camper['SiteAssignment']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Site Assignment'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($camper['SiteAssignment']['name'], array('controller' => 'sites', 'action' => 'view', $camper['SiteAssignment']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Paid'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Paid'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['paid']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Application Complete'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Application Complete'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['application_complete']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Accepted'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Accepted'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['accepted']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Address 1'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Address 1'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['address_1']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Address 2'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Address 2'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['address_2']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('City'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('City'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['city']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('State'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('State'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['state']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Zip'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Zip'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['zip']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Email'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Email'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['email']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Phone'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Phone'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['phone']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Cell Phone'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Cell Phone'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['cell_phone']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Church'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Church'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['church']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('District'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('District'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['district']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Created'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['created']); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Modified'); ?></strong></td>
+		<td>
 			<?php echo h($camper['Camper']['modified']); ?>
 			&nbsp;
-		</dd>
-	</dl>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Camper'), array('action' => 'edit', $camper['Camper']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Camper'), array('action' => 'delete', $camper['Camper']['id']), null, __('Are you sure you want to delete # %s?', $camper['Camper']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Campers'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Camper'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Sites'), array('controller' => 'sites', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Site Assignment'), array('controller' => 'sites', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Camps'), array('controller' => 'camps', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Camp Assignment'), array('controller' => 'camps', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
-<div class="related">
-	<h3><?php echo __('Related Camps'); ?></h3>
-	<?php if (!empty($camper['Camp'])): ?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Id'); ?></th>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Form Pdf'); ?></strong></td>
+		<td>
+			<?php echo h($camper['Camper']['form_pdf']); ?>
+			&nbsp;
+		</td>
+</tr>					</tbody>
+				</table><!-- /.table table-striped table-bordered -->
+			</div><!-- /.table-responsive -->
+			
+		</div><!-- /.view -->
+
+					
+			<div class="related">
+
+				<h3><?php echo __('Related Camps'); ?></h3>
+				
+				<?php if (!empty($camper['Camp'])): ?>
+					
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+											<th><?php echo __('Id'); ?></th>
 		<th><?php echo __('User Id'); ?></th>
 		<th><?php echo __('Name'); ?></th>
 		<th><?php echo __('Description'); ?></th>
 		<th><?php echo __('Created'); ?></th>
 		<th><?php echo __('Modified'); ?></th>
 		<th><?php echo __('Year'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	<?php foreach ($camper['Camp'] as $camp): ?>
+									<th class="actions"><?php echo __('Actions'); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+									<?php
+										$i = 0;
+										foreach ($camper['Camp'] as $camp): ?>
 		<tr>
 			<td><?php echo $camp['id']; ?></td>
 			<td><?php echo $camp['user_id']; ?></td>
@@ -167,18 +204,25 @@
 			<td><?php echo $camp['modified']; ?></td>
 			<td><?php echo $camp['year']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'camps', 'action' => 'view', $camp['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'camps', 'action' => 'edit', $camp['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'camps', 'action' => 'delete', $camp['id']), null, __('Are you sure you want to delete # %s?', $camp['id'])); ?>
+				<?php echo $this->Html->link(__('View'), array('controller' => 'camps', 'action' => 'view', $camp['id']), array('class' => 'btn btn-default btn-xs')); ?>
+				<?php echo $this->Html->link(__('Edit'), array('controller' => 'camps', 'action' => 'edit', $camp['id']), array('class' => 'btn btn-default btn-xs')); ?>
+				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'camps', 'action' => 'delete', $camp['id']), array('class' => 'btn btn-default btn-xs'), __('Are you sure you want to delete # %s?', $camp['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
+							</tbody>
+						</table><!-- /.table table-striped table-bordered -->
+					</div><!-- /.table-responsive -->
+					
+				<?php endif; ?>
 
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Camp'), array('controller' => 'camps', 'action' => 'add')); ?> </li>
-		</ul>
-	</div>
-</div>
+				
+				<div class="actions">
+					<?php echo $this->Html->link('<i class="icon-plus icon-white"></i> '.__('New Camp'), array('controller' => 'camps', 'action' => 'add'), array('class' => 'btn btn-primary', 'escape' => false)); ?>				</div><!-- /.actions -->
+				
+			</div><!-- /.related -->
+
+			
+	</div><!-- /#page-content .span9 -->
+
+</div><!-- /#page-container .row-fluid -->

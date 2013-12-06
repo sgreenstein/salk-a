@@ -113,6 +113,48 @@ class CampersController extends AppController {
 			$this->request->data = $camper;
 		}
 	}	
+
+	public function accept($id = null) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$acceptee = array('Camper' => array('id' => $id, 'accepted' => true));
+			if($this->Camper->save($acceptee, array('validate' => false))) {
+				$this->Session->setFlash(__('Camper accepted'));
+				return $this->redirect(array('action' => 'view', $id));
+			}
+		}
+		$this->Session->setFlash(__('Could not accept the camper'));
+		return $this->redirect(array('action' => 'view', $id));
+	}
+
+
+	public function passedBackgroundCheck($id = null) {
+		//call this when a camper has passed their background check
+		//sets background_check to true
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$passer = array('Camper' => array('id' => $id, 'background_check' => true));
+			if($this->Camper->save($passer, array('validate' => false))) {
+				$this->Session->setFlash(__('Background check marked as passed.'));
+				return $this->redirect(array('action' => 'view', $id));
+			}
+		}
+		$this->Session->setFlash(__('Could not mark background check as passed.'));
+		return $this->redirect(array('action' => 'view', $id));
+	}
+
 	//deletes a camper
 	public function delete($id = null) {
 		if(!$id) {
