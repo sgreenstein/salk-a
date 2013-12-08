@@ -52,6 +52,10 @@ class Camper extends AppModel
 //		),
 //		'over18' => 'boolean',
 		'backgroundCheck' => 'boolean',
+		'camp_choice_1' => array(
+			'rule' => array('differentFieldValues', 'camp_choice_2'),
+			'message' => 'Camp choices must be different.'
+		),
 		'shirt_size' => array(
 			'rule' => array('custom', '/^S$|^M$|^L$|^XL$|^[2-4]XL$/'),
 			'message' => 'S, M, L, XL, 2XL, 3XL, or 4XL',
@@ -111,4 +115,19 @@ class Camper extends AppModel
 			'allowEmpty' => false
 		),
 	);
+
+	function differentFieldValues($field=array(), $compare_field=null)
+	{
+		foreach($field as $key => $value) {
+			$v1 = $value;
+			$v2 = $this->data[$this->name][$compare_field];
+			if($v1 === $v2) {
+				return false;
+			}
+			else {
+				continue;
+			}
+		}
+		return true;
+	}
 }
