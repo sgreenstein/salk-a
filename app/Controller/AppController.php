@@ -95,16 +95,33 @@ class AppController extends Controller {
 		// loop through and deal with the files
 		foreach($formdata as $file) {
 			// replace spaces with underscores
-			$filename = str_replace(' ', '_', $file['name']);
+			//$filename = str_replace(' ', '_', $file['name']);
+            /*print_r($file);
+            switch($file['type']) {
+                case 'image/gif':
+                    $ext = 'gif';
+                    break;
+                case 'image/jpeg':
+                case 'image/pjpeg':
+                    $ext = 'jpg';
+                    break;
+                case 'image/png':
+                    $ext = 'png';
+                    break;
+                default:
+                    $ext = 'jpg';
+            }*/
+            $filename = uniqid() . '.jpg';
 			// assume filetype is false
-			$typeOK = false;
+			$typeOK = true;
 			// check filetype is ok
+        /*
 			foreach($permitted as $type) {
 				if($type == $file['type']) {
 					$typeOK = true;
 					break;
 				}
-			}
+			}*/
 			
 			// if file type ok upload the file
 			if($typeOK) {

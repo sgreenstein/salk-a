@@ -58,12 +58,16 @@ class PhotosController extends AppController {
             else {
                 $this->Session->setFlash(__('Upload failed'));
             }
+            echo "about to redirect";
+            echo "<meta http-equiv=\"refresh\" content=\"0;URL='/photos/'\" />";
 			if ($this->Photo->save($this->request->data)) {
 				$this->Session->setFlash(__('The photo has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The photo could not be saved. Please, try again.'));
+                return $this->redirect(array('action' => 'index'));
 			}
+            return $this->redirect(array('action' => 'index'));
 		}
 		$users = $this->Photo->User->find('list');
 		$this->set(compact('users'));
