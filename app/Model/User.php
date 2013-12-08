@@ -49,6 +49,17 @@ class User extends AppModel {
 		 )
 	)
     );
+	
+/*
+    public $virtualFields = array(
+	    'name' => 'CONCAT(Users.first_name, " ", Users.last_name)'
+    );
+ */
+
+    public function __construct($id = false, $table = null, $ds = null) {
+	        parent::__construct($id, $table, $ds);
+		    $this->virtualFields['name'] = sprintf('CONCAT(%s.first_name, " ", %s.last_name)', $this->alias, $this->alias);
+    }
 
     function equaltofield($check,$otherfield) {
 	//get name of field
