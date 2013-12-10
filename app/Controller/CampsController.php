@@ -85,6 +85,7 @@ class CampsController extends AppController {
 		if (!$camp) {
 			throw new NotFoundException(__('Invalid camp'));
 		}
+		$this->set('camp', $camp);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camp->id = $id;
 			if ($this->Camp->save($this->request->data)) {
@@ -116,7 +117,7 @@ class CampsController extends AppController {
 
 	public function setDirector($id = null, $userId = null) {
 		//sets user with id $userId as the camp director for the camp with id $id
-		if ($this->request->is('post')) {
+		if ($this->request->is(array('post', 'put'))) {
 			if(!$id) {
 				throw new NotFoundException(__('Invalid camp'));
 			}
@@ -132,19 +133,34 @@ class CampsController extends AppController {
 				throw new NotFoundException(__('Invalid user'));
 			}
 			if ($this->request->is(array('post', 'put'))) {
-				$camp['CampDirector'] = $user;
-				$camp['CampDirector']['camp_id'] = $id;
-				$camp['Camp']['user_id'] = $userId;
-				//debug($camp);
-				if($this->Camp->saveAssociated($camp)) {
-					$this->Session->setFlash(__('Camp director set.'));
-					return $this->redirect(array('action' => 'view', $id));
+				$data = array(
+					array('CampDirector' => array('id' => $userId, 'camp_id' => $id)
+//						'Camp' => array('id' => $id, 'CampDirector' => $user)
+					)
+				);
+				//if camp already had a director, delete that association
+				if($camp['CampDirector']['id'])
+					array_unshift($data, array('CampDirector' =>
+							array('id' => $camp['CampDirector']['id'], 'camp_id' => NULL)
+						));
+//				$camp['Camp']['CampDirector'] = $user['CampDirector'];
+//				debug($camp);
+//				return;
+				if($this->Camp->CampDirector->saveMany($data, array('validate' => false, 'deep' => true))) {
+//					if($this->Camp->save($camp, array('validate' => false)))
+						$this->Session->setFlash(__('Camp director set.'));
+//					else
+//						$this->Session->setFlash(__('Camp director could not be set.'));
+				}
+				else {
+					$this->Session->setFlash(__('Camp director could not be set.'));
 				}
 			}
 			else {
 				$this->Session->setFlash(__('Camp director could not be set.'));
 			}
 		}
+		return $this->redirect(array('action' => 'edit', $id));
 	}
 
 	//deletes a camp
@@ -200,8 +216,10 @@ class CampsController extends AppController {
 				$camp = $this->Camp->findById($this->request->params['pass']['0']);
 				if($user['camp_id'] == $camp['Camp']['id'])
 					return true;
-			// campers, parents can view their camp
+			// camp director, campers, parents can view their camp
 			case 'view':
+				if($user['camp_id'] == $this->request->params['pass']['0'])
+					return true;
 				if($this->Camp->isUserInCamp($user['id'], $this->request->params['pass']['0']))			
 					return true;
 		}

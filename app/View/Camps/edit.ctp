@@ -10,5 +10,12 @@
 	echo $this->Form->input('id', array('type' => 'hidden'));
 	?>
     </fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php
+	echo $this->Form->end(__('Submit'));
+	$dir = $camp['CampDirector']['name'];
+	if(!$dir)
+		$dir = 'None';
+	echo 'Current director: ', $dir;
+	echo $this->Form->postLink('Change director', array('action' => 'chooseDirector', $camp['Camp']['id']));
+?>
 </div>
