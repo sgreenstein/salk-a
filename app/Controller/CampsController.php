@@ -53,6 +53,56 @@ class CampsController extends AppController {
 			$this->request->data = $camp;
 		}
 	}
+
+	public function chooseDirector($id = null) {
+		//for displaying a list of possible camp directors to choose from.
+		//The choose_director view should then call setDirector(this camp's id, chosen user's id)
+		//to actually set the director to the chosen user
+		$this->set('possibleDirectors', $this->Camp->CampDirector->find('all'));
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+
+		$camp = $this->Camp->findById($id);
+		if(!$camp) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+		$this->set('camp', $camp);
+	}
+
+	public function setDirector($id = null, $userId = null) {
+		//sets user with id $userId as the camp director for the camp with id $id
+		if ($this->request->is('post')) {
+			if(!$id) {
+				throw new NotFoundException(__('Invalid camp'));
+			}
+			$camp = $this->Camp->findById($id);
+			if(!$camp) {
+				throw new NotFoundException(__('Invalid camp'));
+			}
+			if(!$userId) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			$user = $this->Camp->CampDirector->findById($userId);
+			if(!$user) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			if ($this->request->is(array('post', 'put'))) {
+				$camp['CampDirector'] = $user;
+				$camp['CampDirector']['camp_id'] = $id;
+				$camp['Camp']['user_id'] = $userId;
+				//debug($camp);
+				if($this->Camp->saveAssociated($camp)) {
+					$this->Session->setFlash(__('Camp director set.'));
+					return $this->redirect(array('action' => 'view', $id));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Camp director could not be set.'));
+			}
+		}
+	}
+
 	//deletes a camp
 	public function delete($id = null) {
 		if(!$id) {
