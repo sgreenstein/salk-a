@@ -44,8 +44,7 @@ class User extends AppModel {
 			'rule' => array('equaltofield','password'),
 			'message' => 'Confirm password must match password.',
 			'allowEmpty' => false,
-			'required' => true,
-			'on' => 'create', // Limit validation to 'create' or 'update' operations
+			'required' => true
 		 )
 	)
     );

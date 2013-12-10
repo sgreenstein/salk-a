@@ -77,13 +77,14 @@ class CampersController extends AppController {
 			 }
 			 else {
 				 $this->Session->setFlash(__('Upload failed'));
+				 return;
 			 }
 			$this->Camper->id = $id;
 			if($this->Camper->save($this->request->data, array(
 				'validate' => false, 'fieldList' => array(
 					'insurance_card')))) {
 				$this->Session->setFlash(__('Card added'));
-				return $this->redirect(array('action' => 'view', $id));
+				return $this->redirect(array('action' => 'edit', $id));
 			}
 			else {
 				$this->Session->setFlash(__('Card could not be added.'));
