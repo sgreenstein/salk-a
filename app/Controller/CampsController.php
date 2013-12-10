@@ -21,10 +21,54 @@ class CampsController extends AppController {
 		}
 		$this->set('camp', $camp);
 	}
+
+	//views a camp using the parent password
+	public function parentView($id = null) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+
+		$camp = $this->Camp->findById($id);
+		if(!$camp) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+		$this->set('camp', $camp);
+		$parentId = $this->Session->read('parent_password');
+		if(!$parentId || $parentId != $camp['Camp']['parent_password']) {
+			$this->redirect(array('action' => 'parentLogin', $id));
+		}
+	}
+
+	//logs in a parent
+	public function parentLogin($id = null) {
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+
+		$camp = $this->Camp->findById($id);
+		if(!$camp) {
+			throw new NotFoundException(__('Invalid camp'));
+		}
+		$this->set('camp', $camp);
+		if($this->request->is(array('post', 'put'))) {
+			$this->Session->write('parent_password', $this->request->data['Camp']['parent_password']);
+			$this->redirect(array('action' => 'parentView', $id));
+		}
+	}
+
+
 	//creates a new camp
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Camp->create();
+			$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+			$pass = array(); //remember to declare $pass as an array
+			$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+			for ($i = 0; $i < 8; $i++) {
+				$n = rand(0, $alphaLength);
+				$pass[] = $alphabet[$n];
+			}
+			$this->request->data['Camp']['parent_password'] = implode($pass); //turn the array into a string
 			if ($this->Camp->save($this->request->data)) {
 				$this->Session->setFlash(__('Camp successfully created.'));
 				return $this->redirect(array('action' => 'index'));
