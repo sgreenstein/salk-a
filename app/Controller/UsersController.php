@@ -44,19 +44,6 @@ class UsersController extends AppController {
         }
     }
     
-    public function addParent() {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->User->set('level', 10);
-                $this->User->save();
-                $this->Session->setFlash(__('The user has been created'));
-                return $this->redirect(array('action' => 'index'));
-            }
-            $this->Session->setFlash(__('The user could not be created. Please, try again.'));
-        }
-    }
-    
     public function addCamper() {
         if ($this->request->is('post')) {
             $this->User->create();

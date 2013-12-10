@@ -29,7 +29,7 @@ class CampersController extends AppController {
 			$this->Camper->create();
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Application saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(array('action' => 'view'));
 			}
 			$this->Session->setFlash(__('Application form could not be saved.'));
 		}
@@ -175,7 +175,7 @@ class CampersController extends AppController {
 		}
 		return $this->redirect(array('action' => 'view', $id));
 	}
-
+	
 	public function yearlyReset() {
 		//resets camp choices, background check,
 		//application complete, accepted
@@ -199,8 +199,10 @@ class CampersController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
-	public function accept($id = null) {
-		//marks a camper as accepted into the salkehatchie program
+	public function togglePaid($id = null) {
+		//if camper has not paid, then marks them as having paid.
+		//If they have already been marked as paid,
+		//it marks them as not having paid
 		//called by admin
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
@@ -210,20 +212,49 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			$acceptee = array('Camper' => array('id' => $id, 'accepted' => true));
-			if($this->Camper->save($acceptee, array('validate' => false))) {
-				$this->Session->setFlash(__('Camper accepted'));
+			$payer = array('Camper' => array('id' => $id, 'paid' => !$camper['Camper']['paid']));
+			if($this->Camper->save($payer, array('validate' => false))) {
+				if($camper['Camper']['paid'])
+					$this->Session->setFlash(__("Camper marked as not having paid."));
+				else
+					$this->Session->setFlash(__('Camper marked as having paid.'));
 				return $this->redirect(array('action' => 'view', $id));
 			}
 		}
-		$this->Session->setFlash(__('Could not accept the camper'));
+		$this->Session->setFlash(__("Could not toggle the camper's paid status."));
+		return $this->redirect(array('action' => 'view', $id));
+	}
+
+	public function toggleAcceptance($id = null) {
+		//if camper is not accepted, then marks them as accepted into
+		//the salkehatchie program.
+		//If they have already been accepted, it unaccepts them.
+		//called by admin
+		if(!$id) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		$camper = $this->Camper->findById($id);
+		if(!$camper) {
+			throw new NotFoundException(__('Invalid camper'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$acceptee = array('Camper' => array('id' => $id, 'accepted' => !$camper['Camper']['accepted']));
+			if($this->Camper->save($acceptee, array('validate' => false))) {
+				if($camper['Camper']['accepted'])
+					$this->Session->setFlash(__("Camper's acceptance revoked"));
+				else
+					$this->Session->setFlash(__('Camper accepted'));
+				return $this->redirect(array('action' => 'view', $id));
+			}
+		}
+		$this->Session->setFlash(__("Could not toggle the camper's acceptance status."));
 		return $this->redirect(array('action' => 'view', $id));
 	}
 
 
-	public function passedBackgroundCheck($id = null) {
-		//call this when a camper has passed their background check
-		//sets background_check to true
+	public function toggleBackgroundCheck($id = null) {
+		//if camper has not passed, then marks them as passed
+		//If they have already been marked as passed, it marks them as not passed
 		//called by admin
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
@@ -233,9 +264,12 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			$passer = array('Camper' => array('id' => $id, 'background_check' => true));
+			$passer = array('Camper' => array('id' => $id, 'background_check' => !$camper['Camper']['background_check']));
 			if($this->Camper->save($passer, array('validate' => false))) {
-				$this->Session->setFlash(__('Background check marked as passed.'));
+				if($camper['Camper']['background_check'])
+					$this->Session->setFlash(__('Background check marked as incomplete.'));
+				else
+					$this->Session->setFlash(__('Background check marked as complete.'));
 				return $this->redirect(array('action' => 'view', $id));
 			}
 		}

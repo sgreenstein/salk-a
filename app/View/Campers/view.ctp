@@ -7,8 +7,24 @@
 			
 			<ul class="list-group">			
 						<li class="list-group-item"><?php echo $this->Html->link(__('Edit Camper'), array('action' => 'edit', $camper['Camper']['id']), array('class' => '')); ?> </li>
-						<li class="list-group-item"><?php echo $this->Form->postLink(__('Accept Camper'), array('action' => 'accept', $camper['Camper']['id']), array('class' => '')); ?> </li>
-						<li class="list-group-item"><?php echo $this->Form->postLink(__('Mark background check as complete'), array('action' => 'passedBackgroundCheck', $camper['Camper']['id']), array('class' => '')); ?> </li>
+						<li class="list-group-item"><?php
+if($camper['Camper']['accepted'])
+	$acceptToggle = 'Revoke Camper Acceptance';
+else
+	$acceptToggle = 'Accept Camper';
+		echo $this->Form->postLink(__($acceptToggle), array('action' => 'toggleAcceptance', $camper['Camper']['id']), array('class' => '')); ?> </li>
+						<li class="list-group-item"><?php
+if($camper['Camper']['paid'])
+	$paidToggle = 'Mark as having not paid';
+else
+	$paidToggle = 'Mark as having paid';
+		echo $this->Form->postLink(__($paidToggle), array('action' => 'togglePaid', $camper['Camper']['id']), array('class' => '')); ?> </li>
+						<li class="list-group-item"><?php
+if($camper['Camper']['background_check'])
+	$bcToggle = 'Mark background check incomplete';
+else
+	$bcToggle = 'Mark background check complete';
+echo $this->Form->postLink(__($bcToggle), array('action' => 'toggleBackgroundCheck', $camper['Camper']['id']), array('class' => '')); ?> </li>
 		<li class="list-group-item"><?php echo $this->Form->postLink(__('Delete Camper'), array('action' => 'delete', $camper['Camper']['id']), array('class' => ''), __('Are you sure you want to delete # %s?', $camper['Camper']['id'])); ?> </li>
 		<li class="list-group-item"><?php echo $this->Html->link(__('List Campers'), array('action' => 'index'), array('class' => '')); ?> </li>
 		<li class="list-group-item"><?php echo $this->Html->link(__('New Camper'), array('action' => 'add'), array('class' => '')); ?> </li>
