@@ -1,5 +1,6 @@
 <?php
 // app/Controller/UsersController.php
+App::uses('AppController', 'Controller');
 class UsersController extends AppController {
 
     public function beforeFilter() {
@@ -47,11 +48,11 @@ class UsersController extends AppController {
     public function addCamper() {
         if ($this->request->is('post')) {
 		$this->User->create();
-            if ($this->User->save($this->request->data)) {
                 $this->User->set('level', 20);
-                $this->User->save();
-                $this->Session->setFlash(__('Account created'));
-                return $this->redirect(array('action' => 'index'));
+            if ($this->User->save($this->request->data)) {
+		$this->Session->setFlash(__('Account created'));
+		$this->Auth->login();
+                return $this->redirect(array('action' => 'view', $this->request->data['User']['id']));
             }
             $this->Session->setFlash(__('Account could not be created. Please try again.'));
         }
@@ -99,6 +100,7 @@ class UsersController extends AppController {
 		
 		switch($this->action) {
 			case 'delete':
+			case 'view':
 			case 'edit':
 				$editID = $this->params['pass'][0];
 				if ($editID == $user['id'])
