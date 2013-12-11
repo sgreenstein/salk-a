@@ -65,6 +65,7 @@ class Camper extends AppModel
 		'paid' => 'boolean',
 		'applicationComplete' => 'boolean',
 		'accepted' => 'boolean',
+		'assigned' => 'boolean',
 		'state' => array(
 			'rule' => array('custom', '/^[A-Z]{2}$/'),
 			'message' => 'Postal abbreviation, e.g. SC',
@@ -115,7 +116,7 @@ class Camper extends AppModel
 			'allowEmpty' => false
 		),
 	);
-
+	
 	function differentFieldValues($field=array(), $compare_field=null)
 	{
 		foreach($field as $key => $value) {

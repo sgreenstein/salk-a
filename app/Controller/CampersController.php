@@ -16,11 +16,44 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$this->set('camper', $camper);
+		$this->set('camps', $this->Camper->Camp->find('list'));
+		if ($camper['CampAssignment']['id'])
+			$defaultCampChoice = $camper['CampAssignment']['id'];
+		else
+			$defaultCampChoice = $camper['Camper']['camp_choice_1'];
+		$this->set('defaultCampChoice', $defaultCampChoice);
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Auth->user('level') < 100) {
+				$this->Session->setFlash(__('You do not have permission to do that.'));
+			}
+			else {
+				//assigning to camp
+				if ($camper['Camper']['accepted'] == 1) {
+					$campId = $this->request->data['Camp']['Camp'][0];
+					$data = array('Camp' => array('id' => $campId),
+						'Camper' => array('id' => $id, 'assigned' => 1, 'camp_assignment' => $campId));
+					if ($this->Camper->saveAll($data, array('validate' => false))) {
+						$this->Session->setFlash(__('Assigned the camper to the camp.'));
+						$this->redirect(array('action' => 'view', $id));
+					}
+					else {
+						$this->Session->setFlash(__('Could not assign the camper to the camp.'));
+					}
+				}
+				else {
+					$this->Session->setFlash(__("You must accept the camper before assigning to a camp"));
+				}
+			}
+		}
 	}
 	//creates a camper for this user
 	//corresponds to filling out the application form
 	public function add() {
-		$this->set('campChoices', $this->Camper->Camp->find('list',
+		$this->set('shirtSizes', array('S'=>'S', 'M'=>'M', 'L'=>'L', 'XL'=>'XL', '2XL'=>'2XL', '3XL'=>'3XL', '4XL'=>'4XL')); 
+		$this->set('campChoice1s', $this->Camper->Camp->find('list',
+			array('conditions' => array('Camp.year' => date('Y')))
+		));
+		$this->set('campChoice2s', $this->Camper->Camp->find('list',
 			array('conditions' => array('Camp.year' => date('Y')))
 		));
 		if ($this->request->is('post')) {
@@ -29,7 +62,8 @@ class CampersController extends AppController {
 			$this->Camper->create();
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('Application saved.'));
-				return $this->redirect(array('action' => 'view'));
+				$id = $this->Auth->user('id');
+				return $this->redirect(array('controller' => 'users', 'action' => 'view', $id));
 			}
 			$this->Session->setFlash(__('Application form could not be saved.'));
 		}
@@ -44,7 +78,13 @@ class CampersController extends AppController {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$this->set('camper', $camper);
-		$this->set('campChoices', $this->Camper->Camp->find('list'));
+		$this->set('shirtSizes', array('S'=>'S', 'M'=>'M', 'L'=>'L', 'XL'=>'XL', '2XL'=>'2XL', '3XL'=>'3XL', '4XL'=>'4XL')); 
+		$this->set('campChoice1s', $this->Camper->Camp->find('list',
+			array('conditions' => array('Camp.year' => date('Y')))
+		));
+		$this->set('campChoice2s', $this->Camper->Camp->find('list',
+			array('conditions' => array('Camp.year' => date('Y')))
+		));
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Camper->id = $id;
 			if ($this->Camper->save($this->request->data)) {
@@ -135,31 +175,6 @@ class CampersController extends AppController {
 		}
 	}
 
-	//assigns a camper to a camp, puts the camp in their list of past camps
-	public function assignCamp($id = null) {
-		$this->set('camps', $this->Camper->Camp->find('list'));
-		if(!$id) {
-			throw new NotFoundException(__('Invalid camper'));
-		}
-		$camper = $this->Camper->findById($id);
-		if(!$camper) {
-			throw new NotFoundException(__('Invalid camper'));
-		}
-		$this->set('choice1', $camper['Camper']['camp_choice_1']);
-		$this->set('choice2', $camper['Camper']['camp_choice_2']);
-		if ($this->request->is(array('post', 'put'))) {
-			$this->Camper->id = $id;
-			if($this->Camper->saveAll($this->request->data)) {
-				$this->Session->setFlash(__('Assigned to camp'));
-				return true;
-			}
-			$this->Session->setFlash(__('Could not be assigned. Please try again.'));
-		}
-		if (!$this->request->data) {
-			$this->request->data = $camper;
-		}
-	}	
-	
 	public function applicationComplete($id = null) {
 		//marks a camper's application as complete if:
 		//form is uploaded, insurance card is uploaded,
@@ -195,11 +210,12 @@ class CampersController extends AppController {
 			if($this->Camper->updateAll(
 				array(
 					'id' => $id,
-					'accepted' => false,
+					'accepted' => 0,
+					'assigned' => 0,
 					'camp_choice_1' => null,
 					'camp_choice_2' => null,
-					'background_check' => false,
-					'application_complete' => false
+					'background_check' => 0,
+					'application_complete' => 0
 				)
 			)) {
 				$this->Session->setFlash(__('All campers reset'));

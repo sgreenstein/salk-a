@@ -25,6 +25,11 @@ if($camper['Camper']['background_check'])
 else
 	$bcToggle = 'Mark background check complete';
 echo $this->Form->postLink(__($bcToggle), array('action' => 'toggleBackgroundCheck', $camper['Camper']['id']), array('class' => '')); ?> </li>
+<li class="list-group-item"><?php
+echo $this->Form->create('Camper');
+echo $this->Form->input('Camp', array('value' => $defaultCampChoice));
+echo $this->Form->end(__('Submit'));
+?> </li>
 		<li class="list-group-item"><?php echo $this->Form->postLink(__('Delete Camper'), array('action' => 'delete', $camper['Camper']['id']), array('class' => ''), __('Are you sure you want to delete # %s?', $camper['Camper']['id'])); ?> </li>
 		<li class="list-group-item"><?php echo $this->Html->link(__('List Campers'), array('action' => 'index'), array('class' => '')); ?> </li>
 		<li class="list-group-item"><?php echo $this->Html->link(__('New Camper'), array('action' => 'add'), array('class' => '')); ?> </li>
