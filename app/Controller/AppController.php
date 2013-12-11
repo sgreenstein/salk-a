@@ -111,7 +111,7 @@ class AppController extends Controller {
                 default:
                     $ext = 'jpg';
             }*/
-            $filename = uniqid() . '.jpg';
+            $filename = uniqid();// . '.jpg';
 			// assume filetype is false
 			$typeOK = true;
 			// check filetype is ok

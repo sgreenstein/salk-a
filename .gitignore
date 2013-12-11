@@ -8,7 +8,9 @@
 /build
 /dist
 /tags
-
+/app/webroot/img/form_pdf/
+/app/webroot/img/insurance_cards/
+#
 # OS generated files #
 ######################
 .DS_Store

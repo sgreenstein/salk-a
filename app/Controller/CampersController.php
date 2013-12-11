@@ -72,6 +72,10 @@ class CampersController extends AppController {
 			$fileOK = $this->uploadFiles('img/insurance_cards', $this->request->data['Camper']);
 			// if file was uploaded ok
 			 if(array_key_exists('urls', $fileOK)) {
+				//delete the old file
+				if(is_readable($camper['Camper']['insurance_card'])) {
+					unlink($camper['Camper']['insurance_card']);
+				}
 			 	// save the url in the form data
 				$this->request->data['Camper']['insurance_card'] = $fileOK['urls'][0];
 			 }
@@ -92,22 +96,28 @@ class CampersController extends AppController {
 		}
 	}
     
-    public function addFormPDF($id = null) {
+    public function addFormPdf($id = null) {
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
 		$camper = $this->Camper->findById($id);
-		$this->set('currentForm', $camper['Camper']['form_pdf']);
 		if(!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
+		$this->set('currentForm', $camper['Camper']['form_pdf']);
 		if ($this->request->is(array('post', 'put'))) {
 			// upload the file to the server
 			$fileOK = $this->uploadFiles('img/form_pdf', $this->request->data['Camper']);
 			// if file was uploaded ok
-			 if(array_key_exists('urls', $fileOK)) {
-			 	// save the url in the form data
-				$this->request->data['Camper']['form_pdf'] = $fileOK['urls'][0];
+			if(array_key_exists('urls', $fileOK)) {
+				//delete the old file
+				if(is_readable($camper['Camper']['form_pdf'])) {
+					unlink($camper['Camper']['form_pdf']);
+				}
+				// save the url in the form data
+				 $fileName = $fileOK['urls'][0];
+				 $fileName = preg_replace("/(\.jpg$)/", ".pdf", $fileName);
+				$this->request->data['Camper']['form_pdf'] = $fileName;
 			 }
 			 else {
 				 $this->Session->setFlash(__('Upload failed'));
