@@ -17,11 +17,23 @@ class CampersController extends AppController {
 		}
 		$this->set('camper', $camper);
 		$this->set('camps', $this->Camper->Camp->find('list'));
-		if ($camper['CampAssignment']['id'])
+		if ($camper['CampAssignment']['id']) {
 			$defaultCampChoice = $camper['CampAssignment']['id'];
-		else
+			$this->set('sites', $this->Camper->Camp->Site->find('list', array(
+				'conditions' => array('camp_id' => $camper['CampAssignment']['id'])
+			)));
+		}
+		else {
 			$defaultCampChoice = $camper['Camper']['camp_choice_1'];
+		}
 		$this->set('defaultCampChoice', $defaultCampChoice);
+		if ($this->request->is(array('post', 'put'))) {
+			if(array_key_exists('Camp', $this->request->data))
+				$this->assignToCamp($id, $this->request->data['Camp']['Camp'][0]);
+			else if (array_key_exists('Camper', $this->request->data))
+				$this->assignToSite($id, $this->request->data['Camper']['Site']);
+		}
+/*
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Auth->user('level') < 100) {
 				$this->Session->setFlash(__('You do not have permission to do that.'));
@@ -45,6 +57,7 @@ class CampersController extends AppController {
 				}
 			}
 		}
+*/
 	}
 	//creates a camper for this user
 	//corresponds to filling out the application form
@@ -89,12 +102,66 @@ class CampersController extends AppController {
 			$this->Camper->id = $id;
 			if ($this->Camper->save($this->request->data)) {
 				$this->Session->setFlash(__('The camper has been updated.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(array('action' => 'view', $id));
 			}
 			$this->Session->setFlash(__('The camper could not be updated. Please try again.'));
 		}
 		if (!$this->request->data) {
 			$this->request->data = $camper;
+		}
+	}
+
+	public function assignToCamp($id = null, $campId = null) {
+		if (!$id)
+			throw new NotFoundException(__('Invalid camper'));
+		if (!$campId)
+			throw new NotFoundException(__('Invalid camp'));
+		$camper = $this->Camper->findById($id);
+		if (!$camper)
+			throw new NotFoundException(__('Invalid camp'));
+		if($this->request->is(array('post','put'))) {
+			//assigning to camp
+			if ($camper['Camper']['accepted'] == 1) {
+				$data = array('Camp' => array('id' => $campId),
+					'Camper' => array('id' => $id, 'assigned' => 1, 'site_assignment' => null, 'camp_assignment' => $campId));
+				if ($this->Camper->saveAll($data, array('validate' => false))) {
+					$this->Session->setFlash(__('Assigned the camper to the camp.'));
+					$this->redirect(array('action' => 'view', $id));
+				}
+				else {
+					$this->Session->setFlash(__('Could not assign the camper to the camp.'));
+				}
+			}
+			else {
+				$this->Session->setFlash(__("You must accept the camper before assigning to a camp"));
+			}
+		}
+	}
+
+	public function assignToSite($id = null, $siteId = null) {
+		if (!$id)
+			throw new NotFoundException(__('Invalid camper'));
+		if (!$siteId)
+			throw new NotFoundException(__('Invalid site'));
+		$camper = $this->Camper->findById($id);
+		if (!$camper)
+			throw new NotFoundException(__('Invalid site'));
+		if($this->request->is(array('post','put'))) {
+			//assigning to site
+			if ($camper['Camper']['accepted'] == 1) {
+				$data = array('Site' => array('id' => $siteId),
+					'Camper' => array('id' => $id, 'site_assignment' => $siteId));
+				if ($this->Camper->saveAll($data, array('validate' => false))) {
+					$this->Session->setFlash(__('Assigned the camper to the site.'));
+					$this->redirect(array('action' => 'view', $id));
+				}
+				else {
+					$this->Session->setFlash(__('Could not assign the camper to the site.'));
+				}
+			}
+			else {
+				$this->Session->setFlash(__("You must accept the camper before assigning to a site"));
+			}
 		}
 	}
 
@@ -340,8 +407,17 @@ class CampersController extends AppController {
 			case 'view':
 				$camper = $this->Camper->findById($this->request->params['pass']['0']);
 				if(!$camper)
-					return true;
-				if($user['id'] == $camper['User']['id'] || $user['site_id'] == $camper['SiteAssignment']['id'] || $user['camp_id'] == $camper['Camper']['camp_assignment'])
+					break; //camper doesn't exist
+				if($user['id'] == $camper['User']['id'])
+					return true; //this is the camper
+				if($user['site_id'] && $user['site_id'] == $camper['SiteAssignment']['id'])
+					return true; //site director of camper's current site
+				if($user['camp_id'] && $user['camp_id'] == $camper['Camper']['camp_assignment'])
+					return true; //camp director of camper's current camp
+				break;
+			//camp director can assign camper to site
+			case 'assignToSite':
+				if($user['camp_id'] && $user['camp_id'] == $camper['Camper']['camp_assignment'])
 					return true;
 				break;
 			// user can only create their camper if the user has not already created a camper

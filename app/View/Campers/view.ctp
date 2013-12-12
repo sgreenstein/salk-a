@@ -28,7 +28,12 @@ echo $this->Form->postLink(__($bcToggle), array('action' => 'toggleBackgroundChe
 <li class="list-group-item"><?php
 echo $this->Form->create('Camper');
 echo $this->Form->input('Camp', array('value' => $defaultCampChoice));
-echo $this->Form->end(__('Submit'));
+echo $this->Form->end(__('Assign to camp'));
+?> </li>
+<li class="list-group-item"><?php
+echo $this->Form->create('Camper');
+echo $this->Form->input('Site');
+echo $this->Form->end(__('Assign to site'));
 ?> </li>
 		<li class="list-group-item"><?php echo $this->Form->postLink(__('Delete Camper'), array('action' => 'delete', $camper['Camper']['id']), array('class' => ''), __('Are you sure you want to delete # %s?', $camper['Camper']['id'])); ?> </li>
 		<li class="list-group-item"><?php echo $this->Html->link(__('List Campers'), array('action' => 'index'), array('class' => '')); ?> </li>
