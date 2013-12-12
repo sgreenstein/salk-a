@@ -114,7 +114,7 @@ class Camper extends AppModel
 			'rule' => 'notEmpty',
 			'required' => true,
 			'allowEmpty' => false
-		),
+		)
 	);
 	
 	function differentFieldValues($field=array(), $compare_field=null)
