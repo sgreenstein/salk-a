@@ -62,7 +62,10 @@ class PhotosController extends AppController {
             echo "<meta http-equiv=\"refresh\" content=\"0;URL='/photos/'\" />";
 			if ($this->Photo->save($this->request->data)) {
                 $userID = $this->Auth->user('id');
+                $user2 = $this->Photo->User->findById($this->Auth->user('id'));
+                $campID = $user2['Camper']['camp_assignment'];
                 $this->Photo->set('user_id', $userID);
+                $this->Photo->set('camp_id', $campID);
                 $this->Photo->save();
 				$this->Session->setFlash(__('The photo has been saved.'));
 				return $this->redirect(array('action' => 'index'));
