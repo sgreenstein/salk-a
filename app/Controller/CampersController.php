@@ -15,8 +15,11 @@ class CampersController extends AppController {
 		if(!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
+		//populate dropdown boxes and other data
 		$this->set('camper', $camper);
 		$this->set('camps', $this->Camper->Camp->find('list'));
+		//if assigned to a camp, set that as default choice
+		//populate site choices with that camp's sites
 		if ($camper['CampAssignment']['id']) {
 			$defaultCampChoice = $camper['CampAssignment']['id'];
 			$this->set('sites', $this->Camper->Camp->Site->find('list', array(
@@ -27,41 +30,19 @@ class CampersController extends AppController {
 			$defaultCampChoice = $camper['Camper']['camp_choice_1'];
 		}
 		$this->set('defaultCampChoice', $defaultCampChoice);
+		//if we're getting post or put request, user is trying to set the camp or site
 		if ($this->request->is(array('post', 'put'))) {
+			//set either the camp or site, as appropriate
 			if(array_key_exists('Camp', $this->request->data))
 				$this->assignToCamp($id, $this->request->data['Camp']['Camp'][0]);
 			else if (array_key_exists('Camper', $this->request->data))
 				$this->assignToSite($id, $this->request->data['Camper']['Site']);
 		}
-/*
-		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Auth->user('level') < 100) {
-				$this->Session->setFlash(__('You do not have permission to do that.'));
-			}
-			else {
-				//assigning to camp
-				if ($camper['Camper']['accepted'] == 1) {
-					$campId = $this->request->data['Camp']['Camp'][0];
-					$data = array('Camp' => array('id' => $campId),
-						'Camper' => array('id' => $id, 'assigned' => 1, 'camp_assignment' => $campId));
-					if ($this->Camper->saveAll($data, array('validate' => false))) {
-						$this->Session->setFlash(__('Assigned the camper to the camp.'));
-						$this->redirect(array('action' => 'view', $id));
-					}
-					else {
-						$this->Session->setFlash(__('Could not assign the camper to the camp.'));
-					}
-				}
-				else {
-					$this->Session->setFlash(__("You must accept the camper before assigning to a camp"));
-				}
-			}
-		}
-*/
 	}
 	//creates a camper for this user
 	//corresponds to filling out the application form
 	public function add() {
+		//populate dropdown boxes
 		$this->set('shirtSizes', array('S'=>'S', 'M'=>'M', 'L'=>'L', 'XL'=>'XL', '2XL'=>'2XL', '3XL'=>'3XL', '4XL'=>'4XL')); 
 		$this->set('campChoice1s', $this->Camper->Camp->find('list',
 			array('conditions' => array('Camp.year' => date('Y')))
@@ -90,6 +71,7 @@ class CampersController extends AppController {
 		if (!$camper) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
+		//populate dropdown boxes
 		$this->set('camper', $camper);
 		$this->set('shirtSizes', array('S'=>'S', 'M'=>'M', 'L'=>'L', 'XL'=>'XL', '2XL'=>'2XL', '3XL'=>'3XL', '4XL'=>'4XL')); 
 		$this->set('campChoice1s', $this->Camper->Camp->find('list',
@@ -112,6 +94,8 @@ class CampersController extends AppController {
 	}
 
 	public function assignToCamp($id = null, $campId = null) {
+		//Assigns camper with id $id to the camp of id $campId
+		//make sure camper and camp are valid
 		if (!$id)
 			throw new NotFoundException(__('Invalid camper'));
 		if (!$campId)
@@ -122,6 +106,8 @@ class CampersController extends AppController {
 		if($this->request->is(array('post','put'))) {
 			//assigning to camp
 			if ($camper['Camper']['accepted'] == 1) {
+				//must have been accepted to Salkehatchie already
+				//remove from site, change camp assignment and assignment boolean
 				$data = array('Camp' => array('id' => $campId),
 					'Camper' => array('id' => $id, 'assigned' => 1, 'site_assignment' => null, 'camp_assignment' => $campId));
 				if ($this->Camper->saveAll($data, array('validate' => false))) {
@@ -139,6 +125,8 @@ class CampersController extends AppController {
 	}
 
 	public function assignToSite($id = null, $siteId = null) {
+		//assigns camper with id $id to site with id $siteId
+		//make sure site and camper are valid
 		if (!$id)
 			throw new NotFoundException(__('Invalid camper'));
 		if (!$siteId)
@@ -166,6 +154,7 @@ class CampersController extends AppController {
 	}
 
 	public function addInsuranceCard($id = null) {
+		//uploads a picture of the camper's insurance card
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
@@ -203,7 +192,8 @@ class CampersController extends AppController {
 		}
 	}
     
-    public function addFormPdf($id = null) {
+	public function addFormPdf($id = null) {
+		//uploads a pdf form
 		if(!$id) {
 			throw new NotFoundException(__('Invalid camper'));
 		}
