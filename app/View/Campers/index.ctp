@@ -12,7 +12,8 @@
 				<li class="list-group-item"><?php echo $this->Html->link(__('List Camps'), array('controller' => 'camps', 'action' => 'index'), array('class' => '')); ?></li> 
 				<li class="list-group-item"><?php echo $this->Html->link(__('New Camp Assignment'), array('controller' => 'camps', 'action' => 'add'), array('class' => '')); ?></li> 
 				<li class="list-group-item"><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index'), array('class' => '')); ?></li> 
-				<li class="list-group-item"><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add'), array('class' => '')); ?></li> 
+				<li class="list-group-item"><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add'), array('class' => '')); ?></li>
+				<li class="list-group-item"><?php echo $this->Form->postLink(__('Annual Camper Reset'), array('action' => 'yearlyReset'), array('confirm' =>  __("This will remove all campers from their camps and sites. Campers will be marked as 'not accepted' and 'haven't paid.' This cannot be undone. Are you sure you want to proceed?"))); ?></li> 
 			</ul><!-- /.list-group -->
 			
 		</div><!-- /.actions -->

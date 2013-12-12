@@ -9,3 +9,11 @@
     </fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>
+<?php
+	echo $this->Form->end(__('Submit'));
+	$dir = $site['SiteDirector']['name'];
+	if(!$dir)
+		$dir = 'None';
+	echo 'Current director: ', $dir;
+	echo $this->Form->postLink('Change director', array('action' => 'chooseDirector', $site['Site']['id']));
+?>

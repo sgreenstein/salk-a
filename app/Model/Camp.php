@@ -29,6 +29,9 @@ class Camp extends AppModel {
 			'required' => true,
 			'allowEmpty' => false,
 			'message' => 'Must be a valid year, e.g. 2013'
+		),
+		'parent_password' => array(
+			'rule' => 'notEmpty'
 		)
 	);
 	//Methods

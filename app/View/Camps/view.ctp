@@ -9,7 +9,9 @@
 <p>
 	<?php echo $camp['Camp']['description']; ?>
 </p>
-
+<p>
+	<?php echo "Parent password: ", $camp['Camp']['parent_password']; ?>
+</p>
 <div>
 	<form action="#" method="get">
 		<div class="input-group">
