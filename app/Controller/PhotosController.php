@@ -61,6 +61,9 @@ class PhotosController extends AppController {
             echo "about to redirect";
             echo "<meta http-equiv=\"refresh\" content=\"0;URL='/photos/'\" />";
 			if ($this->Photo->save($this->request->data)) {
+                $userID = $this->Auth->user('id');
+                $this->Photo->set('user_id', $userID);
+                $this->Photo->save();
 				$this->Session->setFlash(__('The photo has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -118,4 +121,36 @@ class PhotosController extends AppController {
 			$this->Session->setFlash(__('The photo could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+
+	public function isAuthorized($user) {
+		// Admin can access every function
+		if (!isset($user)) return false;
+		
+		if (isset($user['level']) && $user['level'] >= 100) {
+			return true;
+		}
+		
+		switch($this->action) {
+            case 'index':
+            case 'view':
+                if (isset($user['level']) && $user['level'] >= 10)
+                    return true;
+                break;
+            case 'add':
+                $user2 = $this->Photo->User->findById($this->Auth->user('id'));
+                if ($user2['Camper']['camp_assignment'] && isset($user['level']) && $user['level'] >= 20)
+                    return true;
+                break;
+            case 'edit':
+            case 'delete':
+                $editID = $this->params['pass'][0];
+                $photo = $this->Photo->findById($editID);
+				if ($photo['user_id'] == $user['id'])
+					return true;
+                break;
+		}
+		
+		return false;
+	}
+}

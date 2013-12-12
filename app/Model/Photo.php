@@ -49,6 +49,13 @@ class Photo extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+        'Camp' => array(
+            'className' => 'Camp',
+            'foreignKey' => 'camp_id',
+            'conditions' => '',
+			'fields' => '',
+			'order' => ''
+        )
 	);
 }
