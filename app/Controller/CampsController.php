@@ -7,7 +7,27 @@ class CampsController extends AppController {
 	}
 	//views all camps
 	public function index() {
-		$this->set('camps', $this->Camp->find('all'));
+		//if admin, show all camps
+		if($this->Auth->user('level') >= 100) {
+			$this->set('camps', $this->Camp->find('all'));
+		}
+		//show only camps user is part of
+		else {
+			$userId = $this->Auth->user('id');
+			$camper = $this->Camp->Camper->User->findById($userId);
+			$options['joins']=array(
+				array('table'=>'campers_camps',
+					'type'=>'INNER',
+					'conditions'=>array(
+						'Camp.id=campers_camps.camp_id',
+					)
+				)
+			);
+			$options['conditions'] = array(
+				'campers_camps.camper_id' => $camper['Camper']['id'],
+			);
+			$this->set('camps', $this->Camp->find('all', $options));
+		}
 	}
 	//views one camp
 	public function view($id = null) {
@@ -216,12 +236,17 @@ class CampsController extends AppController {
 				$camp = $this->Camp->findById($this->request->params['pass']['0']);
 				if($user['camp_id'] == $camp['Camp']['id'])
 					return true;
+				break;
 			// camp director, campers, parents can view their camp
 			case 'view':
 				if($user['camp_id'] == $this->request->params['pass']['0'])
 					return true;
 				if($this->Camp->isUserInCamp($user['id'], $this->request->params['pass']['0']))			
 					return true;
+				break;
+			// anyone logged in can see a list of their camps
+			case 'index':
+				return true;
 		}
 		return parent::isAuthorized($user);
 	}
