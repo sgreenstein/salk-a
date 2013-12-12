@@ -260,27 +260,31 @@ class CampersController extends AppController {
 	}
 	
 	public function yearlyReset() {
-		//resets camp choices, background check,
-		//application complete, accepted
+		//resets camp and site assignments,
+		//camp choices, background check,
+		//application complete, accepted, paid
 		//called by admin
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if($this->Camper->updateAll(
 				array(
-					'id' => $id,
-					'accepted' => 0,
-					'assigned' => 0,
-					'camp_choice_1' => null,
-					'camp_choice_2' => null,
-					'background_check' => 0,
-					'application_complete' => 0
-				)
+					'Camper.accepted' => 0,
+					'Camper.assigned' => 0,
+					'Camper.camp_assignment' => null,
+					'Camper.site_assignment' => null,
+					'Camper.camp_choice_1' => null,
+					'Camper.camp_choice_2' => null,
+					'Camper.paid' => 0,
+					'Camper.background_check' => 0,
+					'Camper.application_complete' => 0
+				),
+				array('Camper.id >' => 0)
 			)) {
 				$this->Session->setFlash(__('All campers reset'));
 				return $this->redirect(array('action' => 'index'));
 			}
+			$this->Session->setFlash(__('Could not reset all campers.'));
+			return $this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Could not reset all campers.'));
-		return $this->redirect(array('action' => 'index'));
 	}
 
 	public function togglePaid($id = null) {
