@@ -1,0 +1,1 @@
+ALTER TABLE `photos` ADD `camp_id` INT NOT NULL;
