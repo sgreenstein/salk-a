@@ -52,8 +52,8 @@ class EventsController extends AppController {
 				$options['conditions'] = array(
 					'Event.camp_id' => $campId,
 					'OR' => array(
-						'Event.site_id' => null,
-						'Event.site_id' => $siteId,
+						array('Event.site_id' => null),
+						array('Event.site_id' => $siteId),
 					)
 				);
 			}
@@ -91,6 +91,7 @@ class EventsController extends AppController {
 				$this->Session->setFlash(__('The event could not be saved. Please, try again.'), 'flash/error');
 			}
 		}
+		//allow for campwide events
 		if($this->Session->read('Auth.User.level') >= 100)
 		{
 			$camps = $this->Event->Camp->find('list');
@@ -98,14 +99,30 @@ class EventsController extends AppController {
 		}
 		else
 		{
-			$siteIds = array($this->Session->read('Auth.User.site_id'));
 			$campId = $this->Session->read('Auth.User.camp_id');
-			debug($siteIds);
-			debug($campId);
+			if($campId)
+			{
+				//camp director. Populate sites from that camp
+				$camps = $this->Event->Camp->find('list', array('conditions' => array(
+					'Camp.id' => $campId
+				)));
+				$sites = $this->Event->Site->find('list', array('conditions' => array(
+					'Site.camp_id' => $campId
+				)));
+			}
+			else
+			{
+				//site director. Populate with his site and the camp it's part of
+				$sites = $this->Event->Site->find('list', array('conditions' => array(
+					'Site.id' => $this->Session->read('Auth.User.site_id')
+				)));
+				$site = $this->Event->Site->findById($this->Session->read('Auth.User.site_id'));
+				$camps = $this->Event->Camp->find('list', array('conditions' => array(
+					'Camp.id' => $site['Camp']['id']
+				)));
+			}
 		}
-//		$camps = $this->Event->Camp->find('list', array('conditions' => array(
-//		)));
-		$sites = $this->Event->Site->find('list');
+		$this->set(compact('camps', 'sites'));
 		$this->set(compact('camps', 'sites'));
 	}
 
@@ -132,8 +149,38 @@ class EventsController extends AppController {
 			$options = array('conditions' => array('Event.' . $this->Event->primaryKey => $id));
 			$this->request->data = $this->Event->find('first', $options);
 		}
-		$camps = $this->Event->Camp->find('list');
-		$sites = $this->Event->Site->find('list');
+		//allow for campwide events
+		if($this->Session->read('Auth.User.level') >= 100)
+		{
+			$camps = $this->Event->Camp->find('list');
+			$sites = $this->Event->Site->find('list');
+		}
+		else
+		{
+			$campId = $this->Session->read('Auth.User.camp_id');
+			if($campId)
+			{
+				//camp director. Populate sites from that camp
+				$camps = $this->Event->Camp->find('list', array('conditions' => array(
+					'Camp.id' => $campId
+				)));
+				$sites = $this->Event->Site->find('list', array('conditions' => array(
+					'Site.camp_id' => $campId
+				)));
+			}
+			else
+			{
+				//site director. Populate with his site and the camp it's part of
+				$sites = $this->Event->Site->find('list', array('conditions' => array(
+					'Site.id' => $this->Session->read('Auth.User.site_id')
+				)));
+				$site = $this->Event->Site->findById($this->Session->read('Auth.User.site_id'));
+				$camps = $this->Event->Camp->find('list', array('conditions' => array(
+					'Camp.id' => $site['Camp']['id']
+				)));
+			}
+		}
+		$this->set(compact('camps', 'sites'));
 		$this->set(compact('camps', 'sites'));
 	}
 

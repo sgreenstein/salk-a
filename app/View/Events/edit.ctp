@@ -35,7 +35,7 @@
 						<?php echo $this->Form->input('camp_id', array('class' => 'form-control')); ?>
 					</div><!-- .form-group -->
 					<div class="form-group">
-						<?php echo $this->Form->input('site_id', array('class' => 'form-control')); ?>
+						<?php echo $this->Form->input('site_id', array('empty' => 'None (for entire camp)', 'class' => 'form-control')); ?>
 					</div><!-- .form-group -->
 					<div class="form-group">
 						<?php echo $this->Form->input('name', array('class' => 'form-control')); ?>

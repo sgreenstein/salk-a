@@ -23,7 +23,6 @@ class SitesController extends AppController {
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site successfully created.'));
-				//TODO: create a new schedule tied to this site
 				return $this->redirect(array('action' => 'index'));
 			}
 			$this->Session->setFlash(__('Site could not be created.'));

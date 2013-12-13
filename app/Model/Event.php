@@ -43,8 +43,8 @@ class Event extends AppModel {
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -106,6 +106,9 @@ class Event extends AppModel {
 	function isInCamp($field=array())
 	{
 		$siteId = $field['site_id'];
+		//if no site, it's a campwide event
+		if(!$siteId)
+			return true;
 		$camp = $this->Camp->findById($this->data[$this->name]['camp_id']);
 		foreach($camp['Site'] as $site)
 		{
