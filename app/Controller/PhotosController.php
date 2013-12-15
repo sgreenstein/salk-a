@@ -21,8 +21,33 @@ class PhotosController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->Photo->recursive = 0;
-		$this->set('photos', $this->Paginator->paginate());
+//		$this->Photo->recursive = 0;
+//		$this->set('photos', $this->Paginator->paginate());
+		$user = $this->Photo->User->findById($this->Auth->user('id'));
+//		debug($this->Camp->Camper->findCamps($camper['Camper']['id']));
+		$options['joins']=array(
+			array('table'=>'campers_camps',
+				'type'=>'INNER',
+				'conditions'=>array(
+					'Camp.id=campers_camps.camp_id',
+				)
+			)
+		);
+		$options['conditions'] = array(
+			'campers_camps.camper_id' => $user['Camper']['id'],
+		);
+//		debug($this->Photo->Camp->find('all', $options));
+		$camps = $this->Photo->Camp->find('all', $options);
+		$photos = array();
+		foreach($camps as $camp)
+		{
+			foreach($camp['Photo'] as $photo)
+			{
+				array_push($photos, $photo);
+			}
+		}
+//		debug($photos);
+		$this->set(compact('photos'));
 	}
 
 /**
@@ -126,6 +151,30 @@ class PhotosController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
+	function canView($userId, $photoId)
+	{
+		$user = $this->Photo->User->findById($userId);
+		$photo = $this->Photo->findById($photoId);
+//		debug($this->Camp->Camper->findCamps($camper['Camper']['id']));
+		$options['joins']=array(
+			array('table'=>'campers_camps',
+				'type'=>'INNER',
+				'conditions'=>array(
+					'Camp.id=campers_camps.camp_id',
+				)
+			)
+		);
+		$options['conditions'] = array(
+			'campers_camps.camper_id' => $user['Camper']['id'],
+		);
+		foreach($this->Photo->Camp->find('all', $options) as $camp)
+		{
+			if($camp['Camp']['id'] == $photo['Photo']['camp_id'])
+				return true;
+		}
+		return false;
+	}
+
 	public function isAuthorized($user) {
 		// Admin can access every function
 		if (!isset($user)) return false;
@@ -136,9 +185,12 @@ class PhotosController extends AppController {
 		
 		switch($this->action) {
             case 'index':
+		    if (isset($user['level']) && $user['level'] >= 10)
+			    return true;
+		    break;
             case 'view':
                 if (isset($user['level']) && $user['level'] >= 10)
-                    return true;
+                    return $this->canView($this->Auth->user('id'), $this->params['pass'][0]);
                 break;
             case 'add':
                 $user2 = $this->Photo->User->findById($this->Auth->user('id'));
