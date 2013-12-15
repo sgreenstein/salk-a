@@ -154,14 +154,14 @@ class CampsController extends AppController {
 			}
 			if ($this->request->is(array('post', 'put'))) {
 				$data = array(
-					array('CampDirector' => array('id' => $userId, 'camp_id' => $id)
+					array('CampDirector' => array('id' => $userId, 'camp_id' => $id, 'level' => 75)
 //						'Camp' => array('id' => $id, 'CampDirector' => $user)
 					)
 				);
 				//if camp already had a director, delete that association
 				if($camp['CampDirector']['id'])
 					array_unshift($data, array('CampDirector' =>
-							array('id' => $camp['CampDirector']['id'], 'camp_id' => NULL)
+							array('id' => $camp['CampDirector']['id'], 'camp_id' => NULL, 'level' => 20)
 						));
 //				$camp['Camp']['CampDirector'] = $user['CampDirector'];
 //				debug($camp);

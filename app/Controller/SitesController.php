@@ -104,12 +104,12 @@ class SitesController extends AppController {
 			}
 			if ($this->request->is(array('post', 'put'))) {
 				$data = array(
-					array('SiteDirector' => array('id' => $userId, 'site_id' => $id))
+					array('SiteDirector' => array('id' => $userId, 'site_id' => $id, 'level' => 50))
 				);
 				//if site already had a director, delete that association
 				if($site['SiteDirector']['id'])
 					array_unshift($data, array('SiteDirector' =>
-							array('id' => $site['SiteDirector']['id'], 'site_id' => NULL)
+							array('id' => $site['SiteDirector']['id'], 'site_id' => NULL, 'level' => 20)
 						));
 				if($this->Site->SiteDirector->saveMany($data, array('validate' => false, 'deep' => true))) {
 					$this->Session->setFlash(__('Site director set.'));
@@ -135,6 +135,8 @@ class SitesController extends AppController {
 			case 'edit':
 			case 'view':
 				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if(!$site)
+					return false;
 				if($user['camp_id'] == $site['Camp']['id'])
 					return true;
 				if($user['site_id'] == $site['Site']['id'])
@@ -143,6 +145,8 @@ class SitesController extends AppController {
 			// camp director can delete site if own camp
 			case 'delete':
 				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if(!$site)
+					return false;
 				if($user['camp_id'] == $site['Camp']['id'])
 					return true;	
 		}
