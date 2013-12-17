@@ -1,36 +1,6 @@
 <div class="campers index">
 	<h2><?php echo __('Campers'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('insurance_card'); ?></th>
-			<th><?php echo $this->Paginator->sort('birth_date'); ?></th>
-			<th><?php echo $this->Paginator->sort('age'); ?></th>
-			<th><?php echo $this->Paginator->sort('over_18'); ?></th>
-			<th><?php echo $this->Paginator->sort('background_check'); ?></th>
-			<th><?php echo $this->Paginator->sort('shirt_size'); ?></th>
-			<th><?php echo $this->Paginator->sort('camp_choice_1'); ?></th>
-			<th><?php echo $this->Paginator->sort('camp_choice_2'); ?></th>
-			<th><?php echo $this->Paginator->sort('camp_assignment'); ?></th>
-			<th><?php echo $this->Paginator->sort('site_assignment'); ?></th>
-			<th><?php echo $this->Paginator->sort('paid'); ?></th>
-			<th><?php echo $this->Paginator->sort('application_complete'); ?></th>
-			<th><?php echo $this->Paginator->sort('accepted'); ?></th>
-			<th><?php echo $this->Paginator->sort('address_1'); ?></th>
-			<th><?php echo $this->Paginator->sort('address_2'); ?></th>
-			<th><?php echo $this->Paginator->sort('city'); ?></th>
-			<th><?php echo $this->Paginator->sort('state'); ?></th>
-			<th><?php echo $this->Paginator->sort('zip'); ?></th>
-			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<th><?php echo $this->Paginator->sort('phone'); ?></th>
-			<th><?php echo $this->Paginator->sort('cell_phone'); ?></th>
-			<th><?php echo $this->Paginator->sort('church'); ?></th>
-			<th><?php echo $this->Paginator->sort('district'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
 	<?php foreach ($campers as $camper): ?>
 	<tr>
 		<td><?php echo h($camper['Camper']['id']); ?>&nbsp;</td>
@@ -78,18 +48,7 @@
 	</tr>
 <?php endforeach; ?>
 	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
+	
 	</div>
 </div>
 <div class="actions">
