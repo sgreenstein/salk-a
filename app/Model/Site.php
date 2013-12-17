@@ -4,9 +4,6 @@ class Site extends AppModel {
 	//Associations
 	public $belongsTo = 'Camp';
 	public $hasOne = array(
-		'Schedule' => array(
-			'className' => 'Schedule'
-		),
 		'SiteDirector' => array(
 			'className' => 'User'
 		)

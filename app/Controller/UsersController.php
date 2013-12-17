@@ -1,5 +1,6 @@
 <?php
 // app/Controller/UsersController.php
+App::uses('AppController', 'Controller');
 class UsersController extends AppController {
 
     public function beforeFilter() {
@@ -37,50 +38,37 @@ class UsersController extends AppController {
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been created'));
+                $this->Session->setFlash(__('Account created'));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(__('The user could not be created. Please, try again.'));
-        }
-    }
-    
-    public function addParent() {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->User->set('level', 10);
-                $this->User->save();
-                $this->Session->setFlash(__('The user has been created'));
-                return $this->redirect(array('action' => 'index'));
-            }
-            $this->Session->setFlash(__('The user could not be created. Please, try again.'));
+            $this->Session->setFlash(__('Account could not be created. Please try again.'));
         }
     }
     
     public function addCamper() {
         if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
+		$this->User->create();
                 $this->User->set('level', 20);
-                $this->User->save();
-                $this->Session->setFlash(__('The user has been created'));
-                return $this->redirect(array('action' => 'index'));
+            if ($this->User->save($this->request->data)) {
+		$this->Session->setFlash(__('Account created'));
+		$this->Auth->login();
+                return $this->redirect(array('action' => 'view', $this->request->data['User']['id']));
             }
-            $this->Session->setFlash(__('The user could not be created. Please, try again.'));
+            $this->Session->setFlash(__('Account could not be created. Please try again.'));
         }
     }
 
     public function edit($id = null) {
-        $this->User->id = $id;
+	    $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
-        if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved'));
-                return $this->redirect(array('action' => 'index'));
+	if ($this->request->is('post') || $this->request->is('put')) {
+            if ($this->User->save($this->request->data, array('validate' => true))) {
+                $this->Session->setFlash(__('User data been saved'));
+                return $this->redirect(array('action' => 'edit', $id));
             }
-            $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+            $this->Session->setFlash(__('User data could not be saved. Please try again.'));
         } else {
             $this->request->data = $this->User->read(null, $id);
             unset($this->request->data['User']['password']);
@@ -112,6 +100,7 @@ class UsersController extends AppController {
 		
 		switch($this->action) {
 			case 'delete':
+			case 'view':
 			case 'edit':
 				$editID = $this->params['pass'][0];
 				if ($editID == $user['id'])

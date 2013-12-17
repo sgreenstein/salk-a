@@ -9,7 +9,8 @@ class Camp extends AppModel {
 	);
 	public $hasMany = array(
 		'Site' => array('dependent' => true),
-		'Event' => array('dependent' => true)
+		'Event' => array('dependent' => true),
+		'Photo' => array('dependent' => true)
 	);
 	public $hasAndBelongsToMany = array(
 		'Camper' => array(
@@ -29,6 +30,9 @@ class Camp extends AppModel {
 			'required' => true,
 			'allowEmpty' => false,
 			'message' => 'Must be a valid year, e.g. 2013'
+		),
+		'parent_password' => array(
+			'rule' => 'notEmpty'
 		)
 	);
 	//Methods

@@ -23,7 +23,6 @@ class SitesController extends AppController {
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site successfully created.'));
-				//TODO: create a new schedule tied to this site
 				return $this->redirect(array('action' => 'index'));
 			}
 			$this->Session->setFlash(__('Site could not be created.'));
@@ -38,11 +37,13 @@ class SitesController extends AppController {
 		if (!$site) {
 			throw new NotFoundException(__('Invalid site'));
 		}
+		$this->set('site', $site);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Site->id = $id;
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('The site has been updated.'));
-				return $this->redirect(array('action' => 'index'));
+				$campId = $site['Site']['camp_id'];
+				return $this->redirect(array('controller' => 'camps', 'action' => 'view', $campId));
 			}
 			$this->Session->setFlash(__('The site could not be updated. Please try again.'));
 		}
@@ -68,6 +69,64 @@ class SitesController extends AppController {
 		$this->Session->setFlash(__('Could not delete the site'));
 	}
 
+	public function chooseDirector($id = null) {
+		//for displaying a list of possible site directors to choose from.
+		//The choose_director view should then call setDirector(this site's id, chosen user's id)
+		//to actually set the director to the chosen user
+		$this->set('possibleDirectors', $this->Site->SiteDirector->find('all'));
+		if(!$id) {
+			throw new NotFoundException(__('Invalid site'));
+		}
+
+		$site = $this->Site->findById($id);
+		if(!$site) {
+			throw new NotFoundException(__('Invalid site'));
+		}
+		$this->set('site', $site);
+	}
+
+	public function setDirector($id = null, $userId = null) {
+		//sets user with id $userId as the site director for the site with id $id
+		if ($this->request->is(array('post', 'put'))) {
+			if(!$id) {
+				throw new NotFoundException(__('Invalid site'));
+			}
+			$site = $this->Site->findById($id);
+			if(!$site) {
+				throw new NotFoundException(__('Invalid site'));
+			}
+			if(!$userId) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			$user = $this->Site->SiteDirector->findById($userId);
+			if(!$user) {
+				throw new NotFoundException(__('Invalid user'));
+			}
+			if ($this->request->is(array('post', 'put'))) {
+				$data = array(
+					array('SiteDirector' => array('id' => $userId, 'site_id' => $id, 'level' => 50))
+				);
+				//if site already had a director, delete that association
+				if($site['SiteDirector']['id'])
+					array_unshift($data, array('SiteDirector' =>
+							array('id' => $site['SiteDirector']['id'], 'site_id' => NULL, 'level' => 20)
+						));
+				if($this->Site->SiteDirector->saveMany($data, array('validate' => false, 'deep' => true))) {
+					$this->Session->setFlash(__('Site director set.'));
+					$campId = $site['Site']['camp_id'];
+					return $this->redirect(array('controller' => 'camps', 'action' => 'view', $campId));
+				}
+				else {
+					$this->Session->setFlash(__('Site director could not be set.'));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Site director could not be set.'));
+			}
+		}
+		return $this->redirect(array('action' => 'edit', $id));
+	}
+
 	public function isAuthorized($user) {
 		if (!isset($user)) return false;
 		switch($this->action) {
@@ -76,6 +135,8 @@ class SitesController extends AppController {
 			case 'edit':
 			case 'view':
 				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if(!$site)
+					return false;
 				if($user['camp_id'] == $site['Camp']['id'])
 					return true;
 				if($user['site_id'] == $site['Site']['id'])
@@ -84,6 +145,8 @@ class SitesController extends AppController {
 			// camp director can delete site if own camp
 			case 'delete':
 				$site = $this->Site->findById($this->request->params['pass']['0']);
+				if(!$site)
+					return false;
 				if($user['camp_id'] == $site['Camp']['id'])
 					return true;	
 		}

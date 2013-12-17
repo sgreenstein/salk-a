@@ -5,7 +5,6 @@ App::uses('AuthComponent', 'Controller/Component');
 class User extends AppModel {
     // associations
     public $hasOne = array(
-	    'Form' => array('dependent' => true),
 	    'Camper' => array('dependent' => true)
     );
     
@@ -39,9 +38,38 @@ class User extends AppModel {
 				'rule' => array('minLength', 8),
 				'message' => 'Passwords must be at least 8 characters long.'
 			)
-        )
+	),
+	'confirm_password' => array(
+		'equaltofield' => array(
+			'rule' => array('equaltofield','password'),
+			'message' => 'Confirm password must match password.',
+			'allowEmpty' => false,
+			'required' => true
+		 )
+	)
     );
 	
+/*
+    public $virtualFields = array(
+	    'name' => 'CONCAT(Users.first_name, " ", Users.last_name)'
+    );
+ */
+
+    public function __construct($id = false, $table = null, $ds = null) {
+	        parent::__construct($id, $table, $ds);
+		    $this->virtualFields['name'] = sprintf('CONCAT(%s.first_name, " ", %s.last_name)', $this->alias, $this->alias);
+    }
+
+    function equaltofield($check,$otherfield) {
+	//get name of field
+	 $fname = '';
+	 foreach ($check as $key => $value){
+	 	$fname = $key;
+		break;
+	 }
+	 return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
+    }
+
 	public function beforeSave($options = array()) {
 		if (isset($this->data[$this->alias]['password'])) {
 			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
