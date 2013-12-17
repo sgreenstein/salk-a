@@ -2,30 +2,35 @@
 	<?php echo $this->Html->script('libs/system-search'); ?>
 </head>
 
-<h1>
-	<?php echo $camp['Camp']['name']; ?>
-</h1>
+<div class="row">
+	<div class="col-md-8">
+		<h1>
+			<?php echo $camp['Camp']['name']; ?>
+		</h1>
+		<p>
+			<?php echo $camp['Camp']['description']; ?>
+		</p>
+	</div>
+	<div class="col-md-4">
+		<form action="#" method="get">
+			<div class="input-group">
+				<input class="form-control" id="system-search" name="q" placeholder="Search for" required>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+				</span>
+			</div>
+		</form>
+	</div>
+</div>
 
-<p>
-	<?php echo $camp['Camp']['description']; ?>
-</p>
-<p>
-	<?php echo "Parent password: ", $camp['Camp']['parent_password']; ?>
-</p>
-<div>
-	<form action="#" method="get">
-		<div class="input-group">
-			<input class="form-control" id="system-search" name="q" placeholder="Search for" required>
-			<span class="input-group-btn">
-				<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
-			</span>
-		</div>
-	</form>
+<div class="row">
 	<table class="table table-hover table-list-search">
-		<tr>
-			<th>Site</th>
-			<th>Description</th>
-		</tr>
+		<thead>
+			<tr>
+				<th>Site</th>
+				<th>Description</th>
+			</tr>
+		</thead>
 		<?php foreach ($camp['Site'] as $site): ?>
 		<tr>
 			<td>
@@ -40,5 +45,14 @@
 		</tr>
 		<?php endforeach; ?>
 	</table>
-	<a href="/camps/addSite/<?php echo $camp['Camp']['id']; ?>/" class="btn btn-primary">Add Site</a>
+</div>
+
+<div class="row">
+	<div class="col-md-1">
+		<a href="/camps/addSite/<?php echo $camp['Camp']['id']; ?>/" class="btn btn-primary">Add Site</a>
+	</div>
+	<div class="col-md-1">
+		<a href="/photos/" class="btn btn-primary">Photos</a>
+	</div>
+	<div class="col-md-10"></div>
 </div>
